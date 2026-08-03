@@ -9,7 +9,7 @@ from plugins.cb_data import app as Client2
 from config import *
 import pyromod
 
-# 1. Direct Logging Setup (logging.ini தேவை இல்லை, KeyError வராது)
+# 1. Direct Logging Setup
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(lineno)d - %(name)s - %(module)s - %(levelname)s - %(message)s",
@@ -32,13 +32,14 @@ def run_flask():
     port = int(os.environ.get("PORT", 8080))
     web_app.run(host='0.0.0.0', port=port)
 
-# 3. Initialize Main Bot Client
+# 3. Initialize Main Bot Client with in_memory=True (Clears Peer Cache)
 bot = Client(
     "Renamer",
     bot_token=BOT_TOKEN,
     api_id=API_ID,
     api_hash=API_HASH,
-    plugins=dict(root='plugins')
+    plugins=dict(root='plugins'),
+    in_memory=True
 )
 
 async def main():
@@ -49,6 +50,9 @@ async def main():
     logger.info("Web Server Started Successfully!")
 
     if STRING_SESSION:
+        # Userbot Client Cache reset
+        Client2.in_memory = True
+        
         await Client2.start()
         await bot.start()
         
@@ -65,10 +69,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
-
-# Jishu Developer 
-# Don't Remove Credit 🥺
-# Telegram Channel @Madflix_Bots
-# Back-Up Channel @JishuBotz
-# Developer @JishuDeveloper
