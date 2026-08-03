@@ -1,4 +1,4 @@
-pyrogram==2.0.83
+Pyrogram>=2.0.106
 pyromod
 humanize
 pymongo
@@ -9,3 +9,4 @@ dnspython
 Flask
 gunicorn
 aiohttp
+motor
