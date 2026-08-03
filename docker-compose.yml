@@ -1,13 +1,22 @@
 version: "3.9"
+
 services:
   workerdisk:
     build: .
+    container_name: renamer_bot
+    restart: always
+    env_file:
+      - .env
     environment:
       - API_ID=${API_ID}
       - API_HASH=${API_HASH}
       - BOT_TOKEN=${BOT_TOKEN}
+      - STRING_SESSION=${STRING_SESSION}
       - DB_NAME=${DB_NAME}
       - DB_URL=${DB_URL}
       - CHANNEL=${CHANNEL}
       - ADMIN=${ADMIN}
       - BOT_PIC=${BOT_PIC}
+      - PORT=${PORT:-8080}
+    ports:
+      - "8080:8080"
