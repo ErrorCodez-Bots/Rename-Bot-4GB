@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import logging.config
 import os
 import sys
 from flask import Flask
@@ -10,11 +9,19 @@ from plugins.cb_data import app as Client2
 from config import *
 import pyromod
 
-# 1. Setup Logging Config
-logging.config.fileConfig('logging.ini')
+# 1. Direct Logging Setup (logging.ini தேவை இல்லை, KeyError வராது)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(lineno)d - %(name)s - %(module)s - %(levelname)s - %(message)s",
+    datefmt="%I:%M:%S %p",
+    handlers=[
+        logging.StreamHandler(sys.stdout),
+        logging.FileHandler("TelegramBot.log", mode="w")
+    ]
+)
 logger = logging.getLogger(__name__)
 
-# 2. Flask App Setup (For Web Server / Healthy Checks)
+# 2. Flask App Setup (For Koyeb Health Check)
 web_app = Flask(__name__)
 
 @web_app.route('/')
@@ -35,14 +42,13 @@ bot = Client(
 )
 
 async def main():
-    # Web சர்வரை தனியாக Background Thread-ல் இயக்குகிறது
+    # Web Server Thread
     t = Thread(target=run_flask)
     t.daemon = True
     t.start()
     logger.info("Web Server Started Successfully!")
 
     if STRING_SESSION:
-        # Userbot மற்றும் Bot இரண்டையும் துவக்குகிறது
         await Client2.start()
         await bot.start()
         
@@ -52,7 +58,6 @@ async def main():
         await Client2.stop()
         await bot.stop()
     else:
-        # Bot மட்டும் துவக்குகிறது
         await bot.start()
         logger.info("Bot Started Successfully!")
         await idle()
