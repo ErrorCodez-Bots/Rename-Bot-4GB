@@ -1,17 +1,18 @@
-
 FROM python:latest
 
 WORKDIR /app
 
-COPY requirements.txt /app/
+# Upgrade system packages & Install required tools
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y git ffmpeg && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN apt update && apt upgrade -y
-RUN apt install git python3-pip ffmpeg -y
+# Copy requirements and install python dependencies first (Fast Caching)
+COPY requirements.txt .
+RUN pip3 install --no-cache-dir -r requirements.txt
 
+# Copy the rest of the project files
 COPY . .
 
-RUN pip3 install -r requirements.txt
-
-COPY . /app
-
-CMD python3 bot.py
+# Start the bot
+CMD ["python3", "bot.py"]
