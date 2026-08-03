@@ -1,31 +1,39 @@
+import asyncio
 from pyrogram import Client, idle
 from plugins.cb_data import app as Client2
 from config import *
 import pyromod
-import pyrogram.utils
 
-pyrogram.utils.MIN_CHAT_ID = -999999999999
-pyrogram.utils.MIN_CHANNEL_ID = -100999999999999
+# Initialize Main Bot Client
+bot = Client(
+    "Renamer",
+    bot_token=BOT_TOKEN,
+    api_id=API_ID,
+    api_hash=API_HASH,
+    plugins=dict(root='plugins')
+)
 
+async def main():
+    if STRING_SESSION:
+        # Start both Userbot (Client2) and Bot
+        await Client2.start()
+        await bot.start()
+        
+        print("Bot and Userbot Started Successfully!")
+        await idle()
+        
+        # Stop both Clients gracefully
+        await Client2.stop()
+        await bot.stop()
+    else:
+        # Start only Bot
+        await bot.start()
+        print("Bot Started Successfully!")
+        await idle()
+        await bot.stop()
 
-
-bot = Client("Renamer", bot_token=BOT_TOKEN, api_id=API_ID, api_hash=API_HASH, plugins=dict(root='plugins'))
-
-
-
-
-if STRING_SESSION:
-    apps = [Client2,bot]
-    for app in apps:
-        app.start()
-    idle()
-    for app in apps:
-        app.stop()
-    
-else:
-    bot.run()
-
-
+if __name__ == "__main__":
+    asyncio.run(main())
 
 
 # Jishu Developer 
