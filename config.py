@@ -63,7 +63,9 @@ HELP_TXT = os.environ.get(
 
 DONATE_TXT = os.environ.get(
     "DONATE_TXT",
-    "<b>Support the developer by donating! ❤️\n\nIf you like this bot, feel free to support us.</b>"
+    "<b><blockquote>🪩 ᴛʜᴀɴᴋs ꜰᴏʀ sʜᴏᴡɪɴɢ ɪɴᴛᴇʀᴇsᴛ ɪɴ ᴅᴏɴᴀᴛɪᴏɴ! 🎐</blockquote></b>
+    <b><blockquote>ɪꜰ ʏᴏᴜ ʟɪᴋᴇ ᴍʏ ʙᴏᴛs & ᴘʀᴏᴊᴇᴄᴛs, ʏᴏᴜ ᴄᴀɴ 🎁 ᴅᴏɴᴀᴛᴇ ᴜs ᴀɴʏ ᴀᴍᴏᴜɴᴛ ꜰʀᴏᴍ 10 ʀs ᴜᴘᴛᴏ ʏᴏᴜʀ ᴄʜᴏɪᴄᴇ. ʏᴏᴜʀ sᴜᴘᴘᴏʀᴛ ʜᴇʟᴘs ᴜs ᴋᴇᴇᴘ ᴛʜᴇ sᴇʀᴠᴇʀs ʀᴜɴɴɪɴɢ ᴀɴᴅ ᴀᴅᴅ ᴍᴏʀᴇ ᴀᴡᴇsᴏᴍᴇ ꜰᴇᴀᴛᴜʀᴇs ꜰᴏʀ ᴇᴠᴇʀʏᴏɴᴇ ᴛᴏ ᴇɴᴊᴏʏ! ❤️</blockquote></b>
+    <b><blockquote>🛍 ᴜᴘɪ ɪᴅ: @upi</blockquote></b>"
 )
 
 MORE_TXT = os.environ.get(
