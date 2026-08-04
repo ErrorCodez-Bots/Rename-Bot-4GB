@@ -59,7 +59,7 @@ HELP_TXT = os.environ.get(
     "<b>• ᴀᴠᴀɪʟᴀʙʟᴇ ᴄᴏᴍᴍᴀɴᴅꜱ</b>\n\n"
     "<blockquote><b>• <u>ᴛʜᴜᴍʙɴᴀɪʟ ꜱᴇᴛᴛɪɴɢꜱ</u>\n"
     "• ꜱᴇɴᴅ ᴀɴʏ ᴘʜᴏᴛᴏ ᴛᴏ ꜱᴇᴛ ɪᴛ ᴀꜱ ᴀ ᴄᴜꜱᴛᴏᴍ ᴛʜᴜᴍʙɴᴀɪʟ.\n"
-    "• /viewthumb - ᴠɪᴇᴡ ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ᴛʜᴜᴍʙɴᴀɪʟ.\n"
+    "• /viewthumb - ᴠɪᴇᴡ ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ᴛʜᴜᴍʙɴᴀɪ🇱.\n"
     "• /delthumb - ᴅᴇʟᴇᴛᴇ ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ᴛʜᴜᴍʙɴᴀɪʟ.\n\n"
     "• <u>ᴄᴀᴘᴛɪᴏɴ ꜱᴇᴛᴛɪɴɢꜱ</u>\n"
     "• /set_caption - ꜱᴇᴛ ᴀ ᴄᴜꜱᴛᴏᴍ ᴄᴀᴘᴛɪᴏɴ.\n"
@@ -90,6 +90,12 @@ DONATE_TXT = os.environ.get(
     "<blockquote><b>ɪꜰ ʏᴏᴜ ʟɪᴋᴇ ᴍʏ ʙᴏᴛꜱ & ᴘʀᴏᴊᴇᴄᴛꜱ, ʏᴏᴜ ᴄᴀɴ\n"
     "🎁 ᴅᴏɴᴀᴛᴇ ᴜꜱ ᴀɴʏ ᴀᴍᴏᴜɴᴛ ꜰʀᴏᴍ 10 ʀꜱ ᴜᴘᴛᴏ ʏᴏᴜʀ ᴄʜᴏɪᴄᴇ. ʏᴏᴜʀ ꜱᴜᴘᴘᴏʀᴛ ʜᴇʟᴘꜱ ᴜꜱ ᴋᴇᴇᴘ ᴛʜᴇ ꜱᴇʀᴠᴇʀꜱ ʀᴜɴɴɪɴɢ ᴀɴᴅ ᴀᴅᴅ ᴍᴏʀᴇ ᴀᴡᴇꜱᴏᴍᴇ ꜰᴇᴀᴛᴜʀᴇꜱ ꜰᴏʀ ᴇᴠᴇʀʏᴏɴᴇ ᴛᴏ ᴇɴᴊᴏʏ! ❤️</b></blockquote>\n\n"
     "<blockquote><b>🛍️ ᴜᴘɪ ɪᴅ: acxanime@upi</b></blockquote>"
+)
+
+# Added missing DONATE_PIC variable
+DONATE_PIC = os.environ.get(
+    "DONATE_PIC", 
+    "https://telegra.ph/file/8dd38af99889caea1cf4b-2bd9a6e6cfb04c2b95.jpg"
 )
 
 MORE_TXT = os.environ.get(
