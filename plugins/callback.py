@@ -1,99 +1,92 @@
-from pyrogram.types import (InlineKeyboardButton, InlineKeyboardMarkup)
-from pyrogram import Client , filters
-from script import *
+from pyrogram.types import (InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery)
+from pyrogram import Client, filters
+import script
 from config import *
 
+# யூசர் & அட்மின் கமாண்ட்ஸ் பிரித்து அமைக்கப்பட்ட ஹெல்ப் டெக்ஸ்ட்
+HELP_TXT = """<b>• AVAILABLE COMMANDS</b>
+
+<b>👤 USER COMMANDS :-</b>
+• /start - Check If The Bot Is Running.
+• /viewthumb - To View Current Thumbnail.
+• /delthumb - To Delete Current Thumbnail.
+• /set_caption - To Set A Custom Caption.
+• /see_caption - To See Your Custom Caption.
+• /del_caption - To Delete Custom Caption.
+• /ping - To Check Bot Ping.
+• /donate - To Support Developer.
+
+<b>👑 ADMIN COMMANDS :-</b>
+• /users - Use This Command To See Total Users.
+• /allids - Use This Command To See All Users IDs List.
+• /broadcast - Message Broadcast Command.
+• /warn - Use This Command To Send A Message To A User.
+• /restart - Use This Command To Cancel All Process And Restart The Bot."""
 
 
+@Client.on_callback_query(filters.regex('^(about|help|home|back|donate|close|cancel|try_again)$'))
+async def cb_handler(bot, query: CallbackQuery):
+    data = query.data
+    user_id = query.from_user.id
+    f_sub = FORCE_SUBS.replace("@", "") if FORCE_SUBS else None
 
+    # 1. HOME / BACK TO MAIN START MENU
+    if data in ["home", "back"]:
+        text = START_TXT.format(mention=query.from_user.mention)
+        keyboard = InlineKeyboardMarkup([  
+            [InlineKeyboardButton("• CLICK FOR MORE •", url="https://t.me/ST_Rename_Update")],
+            [InlineKeyboardButton("HELP", callback_data='help'),
+             InlineKeyboardButton("UPDATES", url="https://t.me/ST_Rename_Update")],
+            [InlineKeyboardButton("DONATE", callback_data='donate')]
+        ])
+        await query.message.edit_text(text=text, reply_markup=keyboard)
 
-@Client.on_callback_query(filters.regex('about'))
-async def about(bot,update):
-    text = script.ABOUT_TXT.format(bot.me.mention)
-    keybord = InlineKeyboardMarkup([  
-                    [InlineKeyboardButton("🔙 Back",callback_data = "home")]
-                  ])
-    await update.message.edit(text = text,reply_markup = keybord)
+    # 2. HELP MENU (User & Admin Commands + Only Back & Close Buttons)
+    elif data == "help":
+        keyboard = InlineKeyboardMarkup([ 
+            [InlineKeyboardButton("< BACK", callback_data='home'),
+             InlineKeyboardButton("CLOSE ×", callback_data='close')]
+        ])
+        await query.message.edit_text(text=HELP_TXT, reply_markup=keyboard, disable_web_page_preview=True)
 
+    # 3. DONATE MENU
+    elif data == "donate":
+        text = getattr(script, 'DONATE_TXT', "<b>Support the developer by donating!</b>")
+        keyboard = InlineKeyboardMarkup([  
+            [InlineKeyboardButton("< BACK", callback_data="home"),
+             InlineKeyboardButton("CLOSE ×", callback_data="close")]
+        ])
+        await query.message.edit_text(text=text, reply_markup=keyboard)
 
+    # 4. CLOSE MENU
+    elif data in ["close", "cancel"]:
+        await query.message.delete()
+        try:
+            await query.message.reply_to_message.delete()
+        except Exception:
+            pass
 
-@Client.on_message(filters.private & filters.command(["donate"]))
-async def donatecm(bot,message):
-    text = script.DONATE_TXT
-    keybord = InlineKeyboardMarkup([
-        [InlineKeyboardButton("🦋 Admin",url = "https://t.me/CallAdminRobot"),
-        InlineKeyboardButton("✖️ Close",callback_data = "cancel") ]])
-    await message.reply_text(text = text,reply_markup = keybord)    
+    # 5. TRY AGAIN FOR FORCE SUB
+    elif data == "try_again":
+        await query.message.delete()
+        if f_sub:
+            try:
+                await bot.get_chat_member(f_sub, user_id)
+            except Exception:
+                await query.message.reply_text(
+                    "<b>Hello Dear \n\nYou Need To Join In My Channel To Use Me\n\nKindly Please Join Channel</b>",
+                    reply_markup=InlineKeyboardMarkup([
+                        [InlineKeyboardButton("🔺 Update Channel 🔺", url=f"https://t.me/{f_sub}")],
+                        [InlineKeyboardButton("🔄 Try Again", callback_data="try_again")]
+                    ])
+                )
+                return
 
-
-
-@Client.on_message(filters.private & filters.user(ADMIN) & filters.command(["admin"]))
-async def admincm(bot,message):
-    text = script.ADMIN_TXT
-    keybord = InlineKeyboardMarkup([
-        [InlineKeyboardButton("✖️ Close ✖️",callback_data = "cancel") ]])
-    await message.reply_text(text = text,reply_markup = keybord)    
-
-
-
-@Client.on_callback_query(filters.regex('help'))
-async def help(bot,update):
-    text = script.HELP_TXT.format(update.from_user.mention)
-    keybord = InlineKeyboardMarkup([ 
-                    [InlineKeyboardButton('🏞 Thumbnail', callback_data='thumbnail'),
-                    InlineKeyboardButton('✏ Caption', callback_data='caption')],
-                    [InlineKeyboardButton('🏠 Home', callback_data='home'),
-                    InlineKeyboardButton('💵 Donate', callback_data='donate')]
-                   ])
-    await update.message.edit(text = text,reply_markup = keybord)
-
-
-
-@Client.on_callback_query(filters.regex('thumbnail'))
-async def thumbnail(bot,update):
-    text = script.THUMBNAIL_TXT
-    keybord = InlineKeyboardMarkup([  
-                    [InlineKeyboardButton("🔙 Back",callback_data = "help")]
-		  ])
-    await update.message.edit(text = text,reply_markup = keybord)
-
-@Client.on_callback_query(filters.regex('caption'))
-async def caption(bot,update):
-    text = script.CAPTION_TXT
-    keybord = InlineKeyboardMarkup([  
-                    [InlineKeyboardButton("🔙 Back",callback_data = "help")]
-		  ])
-    await update.message.edit(text = text,reply_markup = keybord)
-
-@Client.on_callback_query(filters.regex('donate'))
-async def donate(bot,update):
-    text = script.DONATE_TXT
-    keybord = InlineKeyboardMarkup([  
-                    [InlineKeyboardButton("🔙 Back",callback_data = "help")]
-		  ])
-    await update.message.edit(text = text,reply_markup = keybord)
-
-
-@Client.on_callback_query(filters.regex('home'))
-async def home_callback_handler(bot, query):
-    text = f"""Hello {query.from_user.mention} \n\n➻ This Is An Advanced And Yet Powerful Rename Bot.\n\n➻ Using This Bot You Can Rename And Change Thumbnail Of Your Files.\n\n➻ You Can Also Convert Video To File Aɴᴅ File To Video.\n\n➻ This Bot Also Supports Custom Thumbnail And Custom Caption.\n\n<b>Bot Is Made By @Madflix_Bots</b>"""
-    keybord = InlineKeyboardMarkup([  
-                    [InlineKeyboardButton("📢 Updates", url="https://t.me/Madflix_Bots"),
-                    InlineKeyboardButton("💬 Support", url="https://t.me/MadflixBots_Support")],
-                    [InlineKeyboardButton("🛠️ Help", callback_data='help'),
-		            InlineKeyboardButton("❤️‍🩹 About", callback_data='about')],
-                    [InlineKeyboardButton("🧑‍💻 Developer 🧑‍💻", url="https://t.me/CallAdminRobot")]
-		  ])
-    await query.message.edit_text(text=text, reply_markup=keybord)
-
-
-
-
-
-
-
-# Jishu Developer 
-# Don't Remove Credit 🥺
-# Telegram Channel @Madflix_Bots
-# Back-Up Channel @JishuBotz
-# Developer @JishuDeveloper & @MadflixOfficials
+        text = START_TXT.format(mention=query.from_user.mention)
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("• CLICK FOR MORE •", url="https://t.me/ST_Rename_Update")],
+            [InlineKeyboardButton("HELP", callback_data='help'),
+             InlineKeyboardButton("UPDATES", url="https://t.me/ST_Rename_Update")],
+            [InlineKeyboardButton("DONATE", callback_data='donate')]
+        ])
+        await query.message.reply_text(text=text, reply_markup=keyboard)
