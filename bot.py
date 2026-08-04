@@ -7,6 +7,12 @@ from threading import Thread
 from pyrogram import Client, idle
 from config import *
 import pyromod
+import os
+
+print("PWD:", os.getcwd())
+print("Files:", os.listdir())
+print("Helper:", os.path.exists("helper"))
+print("Database:", os.path.exists("helper/database.py"))
 
 # 1. Direct Logging Setup
 logging.basicConfig(
