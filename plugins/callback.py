@@ -13,7 +13,7 @@ async def donate_message_handler(bot, message):
         [InlineKeyboardButton("🦋 ᴀᴅᴍɪɴ", url=admin_url)],
         [InlineKeyboardButton("« ʙᴀᴄᴋ", callback_data="home"),
          InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close")]
-    ]
+    ])
     if 'DONATE_PIC' in globals() and DONATE_PIC:
         await message.reply_photo(
             photo=DONATE_PIC,
