@@ -1,103 +1,176 @@
-import time
+Import pymongo
 import os
-import asyncio
-from PIL import Image
-from hachoir.metadata import extractMetadata
-from hachoir.parser import createParser
+from helper.date import add_date
+from config import DATABASE_URL as DB_URL, DATABASE_NAME as DB_NAME
+
+mongo = pymongo.MongoClient(DB_URL)
+db = mongo[DB_NAME]
+dbcol = db["user"]
 
 
+# Total User
+def total_user():
+    user = dbcol.count_documents({})
+    return user
 
-async def fix_thumb(thumb):
-    width = 0
-    height = 0
+
+# Insert Bot Data
+def botdata(chat_id):
+    bot_id = int(chat_id)
     try:
-        if thumb != None:
-            metadata = extractMetadata(createParser(thumb))
-            if metadata.has("width"):
-                width = metadata.get("width")
-            if metadata.has("height"):
-                height = metadata.get("height")
-                Image.open(thumb).convert("RGB").save(thumb)
-                img = Image.open(thumb)
-                img.resize((320, height))
-                img.save(thumb, "JPEG")
-    except Exception as e:
-        print(e)
-        thumb = None 
-       
-    return width, height, thumb
-    
-async def take_screen_shot(video_file, output_directory, ttl):
-    out_put_file_name = f"{output_directory}/{time.time()}.jpg"
-    file_genertor_command = [
-        "ffmpeg",
-        "-ss",
-        str(ttl),
-        "-i",
-        video_file,
-        "-vframes",
-        "1",
-        out_put_file_name
-    ]
-    process = await asyncio.create_subprocess_exec(
-        *file_genertor_command,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
-    stdout, stderr = await process.communicate()
-    e_response = stderr.decode().strip()
-    t_response = stdout.decode().strip()
-    if os.path.lexists(out_put_file_name):
-        return out_put_file_name
-    return None
+        bot_data = {"_id": bot_id, "total_rename": 0, "total_size": 0}
+        dbcol.insert_one(bot_data)
+    except:
+        pass
 
 
+# Total Renamed Files
+def total_rename(chat_id, renamed_file):
+    now = int(renamed_file) + 1
+    dbcol.update_one({"_id": chat_id}, {"$set": {"total_rename": str(now)}})
 
-async def add_metadata(input_path, output_path, metadata, ms):
+
+# Total Renamed File Size
+def total_size(chat_id, total_size, now_file_size):
+    now = int(total_size) + now_file_size
+    dbcol.update_one({"_id": chat_id}, {"$set": {"total_size": str(now)}})
+
+
+# Insert User Data
+def insert(chat_id):
+    user_id = int(chat_id)
+    user_det = {
+        "_id": user_id, 
+        "file_id": None, 
+        "caption": None, 
+        "daily": 0, 
+        "date": 0,
+        "uploadlimit": 5368709120, 
+        "used_limit": 0, 
+        "usertype": "Free", 
+        "prexdate": None,
+        "metadata": False, 
+        "metadata_code": "By @Madflix_Bots",
+        "rename_mode": "FILENAME",       # Added for UI settings support
+        "main_thumb": True,               # Added for UI settings support
+        "quality_thumbs": "Off",          # Added for UI settings support
+        "copy_source_thumb": False,       # Added for UI settings support
+        "format": "{filename}"            # Added for UI settings support
+    }
     try:
-        await ms.edit("<i>I Found Metadata, Adding Into Your File ⚡</i>")
-        command = [
-            'ffmpeg', '-y', '-i', input_path, '-map', '0', '-c:s', 'copy', '-c:a', 'copy', '-c:v', 'copy',
-            '-metadata', f'title={metadata}',  # Set Title Metadata
-            '-metadata', f'author={metadata}',  # Set Author Metadata
-            '-metadata:s:s', f'title={metadata}',  # Set Subtitle Metadata
-            '-metadata:s:a', f'title={metadata}',  # Set Audio Metadata
-            '-metadata:s:v', f'title={metadata}',  # Set Video Metadata
-            '-metadata', f'artist={metadata}',  # Set Artist Metadata
-            output_path
-        ]
-        
-        process = await asyncio.create_subprocess_exec(
-            *command,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
-        stdout, stderr = await process.communicate()
-        e_response = stderr.decode().strip()
-        t_response = stdout.decode().strip()
-        print(e_response)
-        print(t_response)
-
-        
-        if os.path.exists(output_path):
-            await ms.edit("<i>Metadata Has Been Successfully Added To Your File ✅</i>")
-            return output_path
-        else:
-            await ms.edit("<i>Failed To Add Metadata To Your File ❌</i>")
-            return None
-    except Exception as e:
-        print(f"Error occurred while adding metadata: {str(e)}")
-        await ms.edit("<i>An Error Occurred While Adding Metadata To Your File ❌</i>")
-        return None
-    
+        dbcol.insert_one(user_det)
+    except:
+        return True
+        pass
 
 
+# Add Thumbnail Data
+def addthumb(chat_id, file_id):
+    dbcol.update_one({"_id": chat_id}, {"$set": {"file_id": file_id}})
+
+def delthumb(chat_id):
+    dbcol.update_one({"_id": chat_id}, {"$set": {"file_id": None}})
 
 
+# ============= Metadata Function Code =============== #
+
+def setmeta(chat_id, bool_meta):
+    dbcol.update_one({"_id": chat_id}, {"$set": {"metadata": bool_meta}})
+
+def setmetacode(chat_id, metadata_code):
+    dbcol.update_one({"_id": chat_id}, {"$set": {"metadata_code": metadata_code}})
+
+# ============= Metadata Function Code =============== #
 
 
-# Jishu Developer 
-# Don't Remove Credit 🥺
-# Telegram Channel @Madflix_Bots
-# Back-Up Channel @JishuBotz
-# Developer @JishuDeveloper & @MadflixOfficials
+# Add Caption Data
+def addcaption(chat_id, caption):
+    dbcol.update_one({"_id": chat_id}, {"$set": {"caption": caption}})
+
+def delcaption(chat_id):
+    dbcol.update_one({"_id": chat_id}, {"$set": {"caption": None}})
+
+
+def dateupdate(chat_id, date):
+    dbcol.update_one({"_id": chat_id}, {"$set": {"date": date}})
+
+def used_limit(chat_id, used):
+    dbcol.update_one({"_id": chat_id}, {"$set": {"used_limit": used}})
+
+def usertype(chat_id, type):
+    dbcol.update_one({"_id": chat_id}, {"$set": {"usertype": type}})
+
+def uploadlimit(chat_id, limit):
+    dbcol.update_one({"_id": chat_id}, {"$set": {"uploadlimit": limit}})
+
+
+# Add Premium Data
+def addpre(chat_id):
+    date = add_date()
+    dbcol.update_one({"_id": chat_id}, {"$set": {"prexdate": date[0]}})
+
+def addpredata(chat_id):
+    dbcol.update_one({"_id": chat_id}, {"$set": {"prexdate": None}})
+
+def daily(chat_id, date):
+    dbcol.update_one({"_id": chat_id}, {"$set": {"daily": date}})
+
+def find(chat_id):
+    id = {"_id": chat_id}
+    x = dbcol.find(id)
+    for i in x:
+        file = i.get("file_id")
+        try:
+            caption = i["caption"]
+        except:
+            caption = None
+        try:
+            metadata = i["metadata"]
+        except:
+            metadata = False
+        try:
+            metadata_code = i["metadata_code"]
+        except:
+            metadata_code = None
+            
+        return [file, caption, metadata, metadata_code]
+
+def getid():
+    values = []
+    for key in dbcol.find():
+        id = key["_id"]
+        values.append((id))
+    return values
+
+def delete(id):
+    dbcol.delete_one(id)
+
+def find_one(id):
+    return dbcol.find_one({"_id": id})
+
+
+# ============= Missing UI Settings Functions Added ============= #
+
+async def get_user_settings(user_id):
+    user = dbcol.find_one({"_id": user_id})
+    if not user:
+        # Default settings if user not found in DB
+        return {
+            "rename_mode": "FILENAME",
+            "main_thumb": True,
+            "quality_thumbs": "Off",
+            "copy_source_thumb": False,
+            "format": "{filename}",
+            "caption": None
+        }
+    return {
+        "rename_mode": user.get("rename_mode", "FILENAME"),
+        "main_thumb": user.get("main_thumb", True),
+        "quality_thumbs": user.get("quality_thumbs", "Off"),
+        "copy_source_thumb": user.get("copy_source_thumb", False),
+        "format": user.get("format", "{filename}"),
+        "caption": user.get("caption")
+    }
+
+async def update_user_setting(user_id, key, value):
+    dbcol.update_one({"_id": user_id}, {"$set": {key: value}})
