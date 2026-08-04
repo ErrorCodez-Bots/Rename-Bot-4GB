@@ -13,9 +13,9 @@ async def maintenance_mode(bot, message):
     IS_MAINTENANCE = not IS_MAINTENANCE
     
     if IS_MAINTENANCE:
-        await message.reply_text("<b>Maintenance mode has been activated.</b>")
+        await message.reply_text("<b><blockquote>ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ ᴍᴏᴅᴇ ʜᴀꜱ ʙᴇᴇɴ ᴀᴄᴛɪᴠᴀᴛᴇᴅ.</blockquote></b>")
     else:
-        await message.reply_text("<b>Maintenance mode has been deactivated.</b>")
+        await message.reply_text("<b><blockquote>ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ ᴍᴏᴅᴇ ʜᴀꜱ ʙᴇᴇɴ ᴅᴇᴀᴄᴛɪᴠᴀᴛᴇᴅ.</blockquote></b>")
 
 
 @Client.on_message(~filters.user(ADMIN), group=-1)
@@ -23,7 +23,7 @@ async def check_maintenance(bot, message):
     """Blocks non-admin messages when maintenance mode is active."""
     if IS_MAINTENANCE:
         await message.reply_text(
-            "<b>Bot is gone under maintenance.\n\n"
-            "Please wait for the admin to resume the services.</b>"
+            "<b><blockquote>ʙᴏᴛ ɪꜱ ɢᴏɴᴇ ᴜɴᴅᴇʀ ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ.\n\n"
+            "ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ ꜰᴏʀ ᴛʜᴇ ᴀᴅᴍɪɴ ᴛᴏ ʀᴇꜱᴜᴍᴇ ᴛʜᴇ ꜱᴇʀᴠɪᴄᴇꜱ.</blockquote></b>"
         )
         raise StopPropagation
