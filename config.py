@@ -20,6 +20,9 @@ DATABASE_NAME = os.environ.get("DATABASE_NAME", "madflixbotz")
 # Other Variables Config
 START_PIC = os.environ.get("START_PIC", "https://graph.org/file/ad48ac09b1e6f30d2dae4.jpg")
 
+# Updates Channel Link Config
+UPDATE_CHANNEL = os.environ.get("UPDATE_CHANNEL", "https://t.me/ST_Rename_Update")
+
 # Force Sub Message & Picture Config
 FORCE_SUB_TXT = os.environ.get(
     "FORCE_SUB_TXT", 
@@ -36,30 +39,34 @@ START_TXT = os.environ.get(
     "<b>Hello {mention} 👋\n\nI Am An Advanced File Renamer Bot With 4GB Support & Custom Thumbnail Support!</b>"
 )
 
-ABOUT_TXT = os.environ.get(
-    "ABOUT_TXT", 
-    "<b>🤖 My Name : File Renamer Bot\n📝 Language : Python 3\n📚 Framework : Pyrogram\n📡 Host Server : Render / VPS</b>"
-)
-
 HELP_TXT = os.environ.get(
     "HELP_TXT", 
-    "<b><u>Help Menu</u></b>\n\n• Send Any Photo To Set Custom Thumbnail.\n• Send Any File/Video To Rename It.\n• Use /delete_thumb To Delete Saved Thumbnail."
+    """<b>• AVAILABLE COMMANDS</b>
+
+<b>👤 USER COMMANDS :-</b>
+• /start - Check If The Bot Is Running.
+• /viewthumb - To View Current Thumbnail.
+• /delthumb - To Delete Current Thumbnail.
+• /set_caption - To Set A Custom Caption.
+• /see_caption - See Your Custom Caption.
+• /del_caption - Delete Custom Caption.
+• /ping - Check Bot Ping.
+• /donate - Support Developer.
+
+<b>👑 ADMIN COMMANDS :-</b>
+• /users - See Total Users.
+• /allids - See All Users IDs List.
+• /broadcast - Message Broadcast Command.
+• /warn - Send A Message To A User.
+• /restart - Cancel All Process And Restart The Bot."""
 )
 
+DONATE_TXT = os.environ.get(
+    "DONATE_TXT",
+    "<b>Support the developer by donating! ❤️\n\nIf you like this bot, feel free to support us.</b>"
+)
 
-# If You Need To Add Verify System Then Message Me On Telegram
-# Check Demo Bots
-# https://t.me/FileRenameXBot
-# https://t.me/PremiumRenamerRobot
-# https://t.me/FileRenamerXRobot
-# Token Verification Adding Features Is Paid So If You Want Then Dm Me
-
-# SHORTNER_URL = os.environ.get("SHORTNER_URL", "")
-# SHORTNER_API = os.environ.get("SHORTNER_API", "")
-# TOKEN_TIMEOUT = os.environ.get("TOKEN_TIMEOUT", "")
-
-# Jishu Developer 
-# Don't Remove Credit 🥺
-# Telegram Channel @Madflix_Bots
-# Backup Channel @JishuBotz
-# Developer @JishuDeveloper
+MORE_TXT = os.environ.get(
+    "MORE_TXT",
+    "<b>• CLICK FOR MORE DETAILS •</b>\n\nHere you can find more information about our bot services and channel updates."
+)
