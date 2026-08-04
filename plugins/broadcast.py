@@ -1,43 +1,65 @@
-from pyrogram.errors import FloodWait
 import asyncio
 from pyrogram import Client, filters
+from pyrogram.errors import FloodWait
 from helper.database import getid, delete
-import time
-from config import *
+from config import ADMIN
 
-
-
+# ==========================================
+#             BROADCAST COMMAND
+# ==========================================
 
 @Client.on_message(filters.private & filters.user(ADMIN) & filters.command(["broadcast"]))
 async def broadcast(bot, message):
-    if (message.reply_to_message):
-        ms = await message.reply_text("Getting All IDs From Database. Please Wait...")
-        ids = getid()
-        tot = len(ids)
-        success = 0
-        failed = 0
-        await ms.edit(f"Starting Broadcast... \n\nSending Message To {tot} Users")
-        for id in ids:
+    if not message.reply_to_message:
+        return await message.reply_text(
+            "<b><blockquote>⚠️ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇꜱꜱᴀɢᴇ ᴛᴏ ʙʀᴏᴀᴅᴄᴀꜱᴛ!</blockquote></b>"
+        )
+    
+    ms = await message.reply_text(
+        "<b><blockquote>ɢᴇᴛᴛɪɴɢ ᴀʟʟ ɪᴅꜱ ꜰʀᴏᴍ ᴅᴀᴛᴀʙᴀꜱᴇ. ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ...</blockquote></b>"
+    )
+    
+    ids = getid()
+    tot = len(ids)
+    success = 0
+    failed = 0
+    
+    await ms.edit_text(
+        f"<b><blockquote>ꜱᴛᴀʀᴛɪɴɢ ʙʀᴏᴀᴅᴄᴀꜱᴛ...\n\nꜱᴇɴᴅɪɴɢ ᴍᴇꜱꜱᴀɢᴇ ᴛᴏ {tot} ᴜꜱᴇʀꜱ</blockquote></b>"
+    )
+    
+    for user_id in ids:
+        try:
+            await asyncio.sleep(1)
+            await message.reply_to_message.copy(user_id)
+            success += 1
+        except FloodWait as e:
+            await asyncio.sleep(e.x)
             try:
-                time.sleep(1)
-                await message.reply_to_message.copy(id)
+                await message.reply_to_message.copy(user_id)
                 success += 1
-            except:
+            except Exception:
                 failed += 1
-                delete({"_id": id})
-                pass
-            try:
-                await ms.edit(f"Message Sent To {success} Chats. \n\n{failed} Chats Failed On Receiving Message. \n\nTotal - {tot}")
-            except FloodWait as e:
-                await asyncio.sleep(t.x)
+                delete({"_id": user_id})
+        except Exception:
+            failed += 1
+            delete({"_id": user_id})
+            
+        try:
+            await ms.edit_text(
+                f"<b><blockquote>📢 ʙʀᴏᴀᴅᴄᴀꜱᴛ ᴘʀᴏɢʀᴇꜱꜱ:\n\n"
+                f"✓ ꜱᴜᴄᴄᴇꜱꜱ :- {success}\n"
+                f"✕ ꜰᴀɪʟᴇᴅ :- {failed}\n"
+                f"📊 ᴛᴏᴛᴀʟ :- {tot}</blockquote></b>"
+            )
+        except FloodWait as e:
+            await asyncio.sleep(e.x)
+        except Exception:
+            pass
 
-
-
-
-
-
-# Jishu Developer 
-# Don't Remove Credit 🥺
-# Telegram Channel @Madflix_Bots
-# Back-Up Channel @JishuBotz
-# Developer @JishuDeveloper & @MadflixOfficials
+    await ms.edit_text(
+        f"<b><blockquote>📢 ʙʀᴏᴀᴅᴄᴀꜱᴛ ᴄᴏᴍᴘʟᴇᴛᴇᴅ ✓\n\n"
+        f"✓ ꜱᴜᴄᴄᴇꜱꜱ :- {success}\n"
+        f"✕ ꜰᴀɪʟᴇᴅ :- {failed}\n"
+        f"📊 ᴛᴏᴛᴀʟ :- {tot}</blockquote></b>"
+    )
