@@ -183,17 +183,13 @@ async def callback_handler(client, query: CallbackQuery):
         ])
         await query.message.edit_text(text=text, reply_markup=button, disable_web_page_preview=True)
 
-    # Donate Menu
+    # Donate Menu (Admin Button Removed, Only Back and Close)
     elif data == "donate":
         text = globals().get('DONATE_TXT', "<b>Support the developer by donating! ❤️</b>")
-        owner_link = globals().get('OWNER_LINK', 'https://t.me/ST_Rename_Update')
         button = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("ADMIN 👑", url=owner_link),
+                InlineKeyboardButton("< BACK", callback_data="back"),
                 InlineKeyboardButton("CLOSE ×", callback_data="close")
-            ],
-            [
-                InlineKeyboardButton("< BACK", callback_data="back")
             ]
         ])
         await query.message.edit_text(text=text, reply_markup=button, disable_web_page_preview=True)
@@ -304,4 +300,3 @@ async def send_doc(client, message):
              InlineKeyboardButton("✖️ Cancel", callback_data="cancel")]
         ])
     )
-
