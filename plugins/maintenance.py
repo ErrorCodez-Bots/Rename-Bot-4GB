@@ -1,5 +1,4 @@
 from pyrogram import Client, filters
-from pyrogram.errors import StopPropagation
 from config import ADMIN
 
 # Flag to keep track of maintenance state
@@ -26,4 +25,4 @@ async def check_maintenance(bot, message):
             "<b><blockquote>ʙᴏᴛ ɪꜱ ɢᴏɴᴇ ᴜɴᴅᴇʀ ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ.\n\n"
             "ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ ꜰᴏʀ ᴛʜᴇ ᴀᴅᴍɪɴ ᴛᴏ ʀᴇꜱᴜᴍᴇ ᴛʜᴇ ꜱᴇʀᴠɪᴄᴇꜱ.</blockquote></b>"
         )
-        raise StopPropagation
+        return  # Replaces StopPropagation to halt further handler execution in this group
