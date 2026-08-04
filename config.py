@@ -39,7 +39,7 @@ FORCE_SUB_TXT = os.environ.get(
 )
 FORCE_SUB_PIC = os.environ.get(
     "FORCE_SUB_PIC", 
-    "https://graph.org/file/ad48ac09b1e6f30d2dae4.jpg"
+    "https://telegra.ph/file/8dd38af99889caea1cf4b-2bd9a6e6cfb04c2b95.jpg"
 )
 
 # Text Messages Config in Small Caps (SMLCAPS)
