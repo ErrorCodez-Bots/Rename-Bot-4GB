@@ -1,30 +1,8 @@
 from pyrogram.types import (InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery)
 from pyrogram import Client, filters
-import script
 from config import *
 
-# யூசர் & அட்மின் கமாண்ட்ஸ் பிரித்து அமைக்கப்பட்ட ஹெல்ப் டெக்ஸ்ட்
-HELP_TXT = """<b>• AVAILABLE COMMANDS</b>
-
-<b>👤 USER COMMANDS :-</b>
-• /start - Check If The Bot Is Running.
-• /viewthumb - To View Current Thumbnail.
-• /delthumb - To Delete Current Thumbnail.
-• /set_caption - To Set A Custom Caption.
-• /see_caption - To See Your Custom Caption.
-• /del_caption - To Delete Custom Caption.
-• /ping - To Check Bot Ping.
-• /donate - To Support Developer.
-
-<b>👑 ADMIN COMMANDS :-</b>
-• /users - Use This Command To See Total Users.
-• /allids - Use This Command To See All Users IDs List.
-• /broadcast - Message Broadcast Command.
-• /warn - Use This Command To Send A Message To A User.
-• /restart - Use This Command To Cancel All Process And Restart The Bot."""
-
-
-@Client.on_callback_query(filters.regex('^(about|help|home|back|donate|close|cancel|try_again)$'))
+@Client.on_callback_query(filters.regex('^(about|help|home|back|donate|more|close|cancel|try_again)$'))
 async def cb_handler(bot, query: CallbackQuery):
     data = query.data
     user_id = query.from_user.id
@@ -32,16 +10,23 @@ async def cb_handler(bot, query: CallbackQuery):
 
     # 1. HOME / BACK TO MAIN START MENU
     if data in ["home", "back"]:
-        text = START_TXT.format(mention=query.from_user.mention)
         keyboard = InlineKeyboardMarkup([  
-            [InlineKeyboardButton("• CLICK FOR MORE •", url="https://t.me/ST_Rename_Update")],
+            [InlineKeyboardButton("• CLICK FOR MORE •", callback_data="more")],
             [InlineKeyboardButton("HELP", callback_data='help'),
-             InlineKeyboardButton("UPDATES", url="https://t.me/ST_Rename_Update")],
+             InlineKeyboardButton("UPDATES", url=UPDATE_CHANNEL)],
             [InlineKeyboardButton("DONATE", callback_data='donate')]
         ])
-        await query.message.edit_text(text=text, reply_markup=keyboard)
+        await query.message.edit_text(text=START_TXT.format(mention=query.from_user.mention), reply_markup=keyboard)
 
-    # 2. HELP MENU (User & Admin Commands + Only Back & Close Buttons)
+    # 2. CLICK FOR MORE MENU
+    elif data == "more":
+        keyboard = InlineKeyboardMarkup([ 
+            [InlineKeyboardButton("< BACK", callback_data='home'),
+             InlineKeyboardButton("CLOSE ×", callback_data='close')]
+        ])
+        await query.message.edit_text(text=MORE_TXT, reply_markup=keyboard, disable_web_page_preview=True)
+
+    # 3. HELP MENU
     elif data == "help":
         keyboard = InlineKeyboardMarkup([ 
             [InlineKeyboardButton("< BACK", callback_data='home'),
@@ -49,16 +34,15 @@ async def cb_handler(bot, query: CallbackQuery):
         ])
         await query.message.edit_text(text=HELP_TXT, reply_markup=keyboard, disable_web_page_preview=True)
 
-    # 3. DONATE MENU
+    # 4. DONATE MENU (< BACK & CLOSE ×)
     elif data == "donate":
-        text = getattr(script, 'DONATE_TXT', "<b>Support the developer by donating!</b>")
         keyboard = InlineKeyboardMarkup([  
-            [InlineKeyboardButton("< BACK", callback_data="home"),
+            [InlineKeyboardButton("< BACK", callback_data='home'),
              InlineKeyboardButton("CLOSE ×", callback_data="close")]
         ])
-        await query.message.edit_text(text=text, reply_markup=keyboard)
+        await query.message.edit_text(text=DONATE_TXT, reply_markup=keyboard, disable_web_page_preview=True)
 
-    # 4. CLOSE MENU
+    # 5. CLOSE MENU
     elif data in ["close", "cancel"]:
         await query.message.delete()
         try:
@@ -66,7 +50,7 @@ async def cb_handler(bot, query: CallbackQuery):
         except Exception:
             pass
 
-    # 5. TRY AGAIN FOR FORCE SUB
+    # 6. TRY AGAIN FOR FORCE SUB
     elif data == "try_again":
         await query.message.delete()
         if f_sub:
@@ -82,11 +66,10 @@ async def cb_handler(bot, query: CallbackQuery):
                 )
                 return
 
-        text = START_TXT.format(mention=query.from_user.mention)
         keyboard = InlineKeyboardMarkup([
-            [InlineKeyboardButton("• CLICK FOR MORE •", url="https://t.me/ST_Rename_Update")],
+            [InlineKeyboardButton("• CLICK FOR MORE •", callback_data="more")],
             [InlineKeyboardButton("HELP", callback_data='help'),
-             InlineKeyboardButton("UPDATES", url="https://t.me/ST_Rename_Update")],
+             InlineKeyboardButton("UPDATES", url=UPDATE_CHANNEL)],
             [InlineKeyboardButton("DONATE", callback_data='donate')]
         ])
-        await query.message.reply_text(text=text, reply_markup=keyboard)
+        await query.message.reply_text(text=START_TXT.format(mention=query.from_user.mention), reply_markup=keyboard)
