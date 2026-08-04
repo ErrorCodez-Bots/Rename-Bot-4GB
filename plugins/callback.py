@@ -4,7 +4,53 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQ
 from database.database import get_user_settings, update_user_setting
 from config import *
 
-@Client.on_callback_query(filters.regex('^(home|more|panel|meta_config|rename_mode|thumbnails|caption|format|set_rename_|set_thumb_|help|donate|close)$'))
+@Client.on_message(filters.private & filters.command('donate'))
+async def donate_message_handler(bot, message):
+    admin_val = globals().get('ADMIN', '')
+    admin_url = f"tg://openmessage?user_id={admin_val}" if str(admin_val).isdigit() else f"https://t.me/{str(admin_val).replace('@', '')}"
+    
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton("🦋 ᴀᴅᴍɪɴ", url=admin_url)],
+        [InlineKeyboardButton("« ʙᴀᴄᴋ", callback_data="home"),
+         InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close")]
+    ]
+    if 'DONATE_PIC' in globals() and DONATE_PIC:
+        await message.reply_photo(
+            photo=DONATE_PIC,
+            caption=DONATE_TXT,
+            reply_markup=keyboard,
+            quote=True
+        )
+    else:
+        await message.reply_text(
+            text=DONATE_TXT,
+            reply_markup=keyboard,
+            disable_web_page_preview=True,
+            quote=True
+        )
+
+@Client.on_message(filters.private & filters.command('spoiler'))
+async def spoiler_message_handler(bot, message):
+    is_spoiler = False  # Replace with database query if available, e.g., settings['is_spoiler']
+    
+    status_text = "ᴇɴᴀʙʟᴇᴅ" if is_spoiler else "ᴅɪꜱᴀʙʟᴇᴅ"
+    btn_text = "ᴅɪꜱᴀʙʟᴇ ꜱᴘᴏɪʟᴇʀ" if is_spoiler else "ᴇɴᴀʙʟᴇ ꜱᴘᴏɪʟᴇʀ"
+    callback_data = "spoiler_off" if is_spoiler else "spoiler_on"
+    
+    text = (
+        f"<b>ᴍᴇᴅɪᴀ ꜱᴘᴏɪʟᴇʀ ꜱᴇᴛᴛɪɴɢꜱ </b>\n\n"
+        f"<b>ᴄᴜʀʀᴇɴᴛ ꜱᴛᴀᴛᴜꜱ: {status_text}</b>\n\n"
+        f"<b>ɪꜰ ᴇɴᴀʙʟᴇᴅ, ʏᴏᴜʀ ʀᴇɴᴀᴍᴇᴅ ᴍᴇᴅɪᴀ (ᴠɪᴅᴇᴏꜱ) ᴡɪʟʟ ʙᴇ ꜱᴇɴᴛ ᴡɪᴛʜ ᴀ ꜱᴘᴏɪʟᴇʀ ᴇꜰꜰᴇᴄᴛ.</b>"
+    )
+    
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton(btn_text, callback_data=callback_data)],
+        [InlineKeyboardButton("« ʙᴀᴄᴋ", callback_data="home"), InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close")]
+    ])
+    
+    await message.reply_text(text, reply_markup=keyboard, quote=True)
+
+@Client.on_callback_query(filters.regex('^(home|more|panel|meta_config|rename_mode|thumbnails|caption|format|set_rename_|set_thumb_|help|donate|spoiler_on|spoiler_off|close)$'))
 async def cb_handler(bot, query: CallbackQuery):
     data = query.data
     user_id = query.from_user.id
@@ -62,15 +108,15 @@ async def cb_handler(bot, query: CallbackQuery):
     # 4. META CONFIG MENU
     elif data == "meta_config":
         text = (
-            "<b><blockquote>META CONFIG\n\n"
-            "Control the rename setup users change most often.\n"
-            f"• Custom format: {settings['format']}\n"
-            f"• Caption template: {settings['caption']}\n"
-            f"• Rename mode: <b>{settings['rename_mode']}</b>\n"
-            f"• Main thumbnail: <b>{settings['main_thumb']}</b>\n"
-            f"• Quality thumbs: <b>{settings['quality_thumbs']}</b>\n"
-            f"• Copy source file thumb: <b>{settings['copy_source_thumb']}</b>\n\n"
-            "Use buttons for quick setup.</blockquote></b>"
+            "<b><blockquote>ᴍᴇᴛᴀ ᴄᴏɴꜰɪɢ\n\n"
+            "ᴄᴏɴᴛʀᴏʟ ᴛʜᴇ ʀᴇɴᴀᴍᴇ ꜱᴇᴛᴜᴘ ᴜꜱᴇʀꜱ ᴄʜᴀɴɢᴇ ᴍᴏꜱᴛ ᴏꜰᴛᴇɴ.\n"
+            f"• ᴄᴜꜱᴛᴏᴍ ꜰᴏʀᴍᴀᴛ: {settings['format']}\n"
+            f"• ᴄᴀᴘᴛɪᴏɴ ᴛᴇᴍᴘʟᴀᴛᴇ: {settings['caption']}\n"
+            f"• ʀᴇɴᴀᴍᴇ ᴍᴏᴅᴇ: <b>{settings['rename_mode']}</b>\n"
+            f"• ᴍᴀɪɴ ᴛʜᴜᴍʙɴᴀɪʟ: <b>{settings['main_thumb']}</b>\n"
+            f"• ǫᴜᴀʟɪᴛʏ ᴛʜᴜᴍʙꜱ: <b>{settings['quality_thumbs']}</b>\n"
+            f"• ᴄᴏᴘʏ ꜱᴏᴜʀᴄᴇ ꜰɪʟᴇ ᴛʜᴜᴍʙ: <b>{settings['copy_source_thumb']}</b>\n\n"
+            "ᴜꜱᴇ ʙᴜᴛᴛᴏɴꜱ ꜰᴏʀ ǫᴜɪᴄᴋ ꜱᴇᴛᴜᴘ.</blockquote></b>"
         )
         keyboard = InlineKeyboardMarkup([ 
             [InlineKeyboardButton("📝 ʀᴇɴᴀᴍᴇ ᴍᴏᴅᴇ", callback_data='rename_mode'),
@@ -86,19 +132,19 @@ async def cb_handler(bot, query: CallbackQuery):
     # 5. RENAME MODE MENU & ACTIONS
     elif data == "rename_mode":
         text = (
-            "<b><blockquote>📝 RENAME MODE\n\n"
-            f"Current mode: <b>{settings['rename_mode']}</b>\n\n"
-            "• FILENAME MODE: Changes the actual file name.\n"
-            "• CAPTION MODE: Keeps the file name, but adds a custom caption.\n"
-            "• AUTO DETECT MODE: Automatically detects and applies settings.</blockquote></b>"
+            "<b><blockquote>📝 ʀᴇɴᴀᴍᴇ ᴍᴏᴅᴇ\n\n"
+            f"ᴄᴜʀʀᴇɴᴛ ᴍᴏᴅᴇ: <b>{settings['rename_mode']}</b>\n\n"
+            "• ꜰɪʟᴇɴᴀᴍᴇ ᴍᴏᴅᴇ: ᴄʜᴀɴɢᴇꜱ ᴛʜᴇ ᴀᴄᴛᴜᴀʟ ꜰɪʟᴇ ɴᴀᴍᴇ.\n"
+            "• ᴄᴀᴘᴛɪᴏɴ ᴍᴏᴅᴇ: ᴋᴇᴇᴘꜱ ᴛʜᴇ ꜰɪʟᴇ ɴᴀᴍᴇ, ʙᴜᴛ ᴀᴅᴅꜱ ᴀ ᴄᴜꜱᴛᴏᴍ ᴄᴀᴘᴛɪᴏɴ.\n"
+            "• ᴀᴜᴛᴏ ᴅᴇᴛᴇᴄᴛ ᴍᴏᴅᴇ: ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ ᴅᴇᴛᴇᴄᴛꜱ ᴀɴᴅ ᴀᴘᴘʟɪᴇꜱ ꜱᴇᴛᴛɪɴɢꜱ.</blockquote></b>"
         )
         keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("ꜰɪʟᴇ ɴᴀᴍᴇ", callback_data="set_rename_FILENAME"),
              InlineKeyboardButton("ᴄᴀᴘᴛɪᴏɴ", callback_data="set_rename_CAPTION"),
              InlineKeyboardButton("ᴀᴜᴛᴏ ᴅᴇᴛᴇᴄᴛ", callback_data="set_rename_AUTODETECT")],
-            [InlineKeyboardButton("« ʙᴀᴄᴋ", callback_data="meta_config"),
-             InlineKeyboardButton("🏠 ʜᴏᴍᴇ", callback_data="home"),
-             InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close")]
+            [InlineKeyboardButton("« ʙᴀᴄᴋ", callback_data='meta_config'),
+             InlineKeyboardButton("🏠 ʜᴏᴍᴇ", callback_data='home'),
+             InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data='close')]
         ])
         await query.message.edit_text(text=text, reply_markup=keyboard)
 
@@ -112,20 +158,20 @@ async def cb_handler(bot, query: CallbackQuery):
     # 6. THUMBNAILS MENU & ACTIONS
     elif data == "thumbnails":
         text = (
-            "<b><blockquote>🖼️ THUMBNAIL SETTINGS\n\n"
-            f"• Main thumb: <b>{settings['main_thumb']}</b>\n"
-            f"• Quality thumbs: <b>{settings['quality_thumbs']}</b>\n"
-            f"• Copy source thumb: <b>{settings['copy_source_thumb']}</b>\n\n"
-            "Configure your thumbnails below.</blockquote></b>"
+            "<b><blockquote>🖼️ ᴛʜᴜᴍʙɴᴀɪʟ ꜱᴇᴛᴛɪɴɢꜱ\n\n"
+            f"• ᴍᴀɪɴ ᴛʜᴜᴍʙ: <b>{settings['main_thumb']}</b>\n"
+            f"• ǫᴜᴀʟɪᴛʏ ᴛʜᴜᴍʙꜱ: <b>{settings['quality_thumbs']}</b>\n"
+            f"• ᴄᴏᴘʏ ꜱᴏᴜʀᴄᴇ ᴛʜᴜᴍʙ: <b>{settings['copy_source_thumb']}</b>\n\n"
+            "ᴄᴏɴꜰɪɢᴜʀᴇ ʏᴏᴜʀ ᴛʜᴜᴍʙɴᴀɪʟꜱ ʙᴇʟᴏᴡ.</blockquote></b>"
         )
         keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("ꜱᴇᴛ ᴍᴀɪɴ", callback_data="set_thumb_main"),
              InlineKeyboardButton("ᴄᴏᴘʏ ᴛʜᴜᴍʙ", callback_data="set_thumb_copy")],
             [InlineKeyboardButton("ᴠɪᴇᴡ ᴍᴀɪɴ", callback_data="view_main"),
              InlineKeyboardButton("ᴅᴇʟᴇᴛᴇ ᴍᴀɪɴ", callback_data="delete_main")],
-            [InlineKeyboardButton("« ʙᴀᴄᴋ", callback_data="meta_config"),
-             InlineKeyboardButton("🏠 ʜᴏᴍᴇ", callback_data="home"),
-             InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close")]
+            [InlineKeyboardButton("« ʙᴀᴄᴋ", callback_data='meta_config'),
+             InlineKeyboardButton("🏠 ʜᴏᴍᴇ", callback_data='home'),
+             InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data='close')]
         ])
         await query.message.edit_text(text=text, reply_markup=keyboard)
 
@@ -139,11 +185,11 @@ async def cb_handler(bot, query: CallbackQuery):
     # 7. CAPTION MENU
     elif data == "caption":
         text = (
-            f"<b><blockquote>💬 CAPTION SETTINGS\n\n"
-            f"Current caption: <b>{settings['caption']}</b></blockquote></b>\n\n"
-            "<b><blockquote>To set a new caption, use the command:\n"
+            f"<b><blockquote>💬 ᴄᴀᴘᴛɪᴏɴ ꜱᴇᴛᴛɪɴɢꜱ\n\n"
+            f"ᴄᴜʀʀᴇɴᴛ ᴄᴀᴘᴛɪᴏɴ: <b>{settings['caption']}</b></blockquote></b>\n\n"
+            "<b><blockquote>ᴛᴏ ꜱᴇᴛ ᴀ ɴᴇᴡ ᴄᴀᴘᴛɪᴏɴ, ᴜꜱᴇ ᴛʜᴇ ᴄᴏᴍᴍᴀɴᴅ:\n"
             "<code>/set_caption Your caption here</code>\n\n"
-            "Available tags: {filename}, {title}, {episode}, {season}, {quality}, {chapter}, {audio}</blockquote></b>"
+            "ᴀᴠᴀɪʟᴀʙʟᴇ ᴛᴀɢꜱ: {filename}, {title}, {episode}, {season}, {quality}, {chapter}, {audio}</blockquote></b>"
         )
         keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("« ʙᴀᴄᴋ", callback_data="meta_config"),
@@ -155,11 +201,11 @@ async def cb_handler(bot, query: CallbackQuery):
     # 8. FORMAT MENU
     elif data == "format":
         text = (
-            f"<b><blockquote>⚙️ FORMAT SETTINGS\n\n"
-            f"Current format: <b>{settings['format']}</b></blockquote></b>\n\n"
-            "<b><blockquote>To set a new format, use the command:\n"
+            f"<b><blockquote>⚙️ ꜰᴏʀᴍᴀᴛ ꜱᴇᴛᴛɪɴɢꜱ\n\n"
+            f"ᴄᴜʀʀᴇɴᴛ ꜰᴏʀᴍᴀᴛ: <b>{settings['format']}</b></blockquote></b>\n\n"
+            "<b><blockquote>ᴛᴏ ꜱᴇᴛ ᴀ ɴᴇᴡ ꜰᴏʀᴍᴀᴛ, ᴜꜱᴇ ᴛʜᴇ ᴄᴏᴍᴍᴀɴᴅ:\n"
             "<code>/set_format Your format here</code>\n\n"
-            "Available tags: {filename}, {title}, {episode}, {season}, {quality}, {chapter}, {audio}</blockquote></b>"
+            "ᴀᴠᴀɪʟᴀʙʟᴇ ᴛᴀɢꜱ: {filename}, {title}, {episode}, {season}, {quality}, {chapter}, {audio}</blockquote></b>"
         )
         keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("« ʙᴀᴄᴋ", callback_data="meta_config"),
@@ -182,7 +228,6 @@ async def cb_handler(bot, query: CallbackQuery):
 
     # 10. DONATE MENU
     elif data == "donate":
-        # Dynamic admin link generation using the ADMIN ID or Username configured in config.py
         admin_val = globals().get('ADMIN', '')
         admin_url = f"tg://openmessage?user_id={admin_val}" if str(admin_val).isdigit() else f"https://t.me/{str(admin_val).replace('@', '')}"
         
@@ -191,12 +236,46 @@ async def cb_handler(bot, query: CallbackQuery):
             [InlineKeyboardButton("« ʙᴀᴄᴋ", callback_data="home"),
              InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close")]
         ])
-        await query.message.edit_text(
-            text=DONATE_TXT,
-            reply_markup=keyboard,
-            disable_web_page_preview=True
-        )
+        if 'DONATE_PIC' in globals() and DONATE_PIC:
+            try:
+                await query.message.edit_media(
+                    media=InputMediaPhoto(media=DONATE_PIC, caption=DONATE_TXT),
+                    reply_markup=keyboard
+                )
+            except Exception:
+                await query.message.edit_text(
+                    text=DONATE_TXT,
+                    reply_markup=keyboard,
+                    disable_web_page_preview=True
+                )
+        else:
+            await query.message.edit_text(
+                text=DONATE_TXT,
+                reply_markup=keyboard,
+                disable_web_page_preview=True
+            )
 
-    # 11. CLOSE
+    # 11. SPOILER TOGGLE HANDLERS
+    elif data in ["spoiler_on", "spoiler_off"]:
+        is_spoiler = True if data == "spoiler_on" else False
+        
+        status_text = "ᴇɴᴀʙʟᴇᴅ" if is_spoiler else "ᴅɪꜱᴀʙʟᴇᴅ"
+        btn_text = "ᴅɪꜱᴀʙʟᴇ ꜱᴘᴏɪʟᴇʀ" if is_spoiler else "ᴇɴᴀʙʟᴇ ꜱᴘᴏɪʟᴇʀ"
+        callback_data = "spoiler_off" if is_spoiler else "spoiler_on"
+        
+        text = (
+            f"<b>ᴍᴇᴅɪᴀ ꜱᴘᴏɪʟᴇʀ ꜱᴇᴛᴛɪɴɢꜱ </b>\n\n"
+            f"<b>ᴄᴜʀʀᴇɴᴛ ꜱᴛᴀᴛᴜꜱ: {status_text}</b>\n\n"
+            f"<b>ɪꜰ ᴇɴᴀʙʟᴇᴅ, ʏᴏᴜʀ ʀᴇɴᴀᴍᴇᴅ ᴍᴇᴅɪᴀ (ᴠɪᴅᴇᴏꜱ) ᴡɪʟʟ ʙᴇ ꜱᴇɴᴛ ᴡɪᴛʜ ᴀ ꜱᴘᴏɪʟᴇʀ ᴇꜰꜰᴇᴄᴛ.</b>"
+        )
+        
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton(btn_text, callback_data=callback_data)],
+            [InlineKeyboardButton("« ʙᴀᴄᴋ", callback_data="home"), InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close")]
+        ])
+        
+        await query.message.edit_text(text, reply_markup=keyboard)
+
+    # 12. CLOSE
     elif data == "close":
         await query.message.delete()
