@@ -7,51 +7,115 @@ from config import DONATE_PIC, DONATE_TXT
 
 # ----------------- ᴍᴇᴛᴀᴅᴀᴛᴀ ʜᴀɴᴅʟᴇʀꜱ -----------------
 
-ON = [[InlineKeyboardButton('ᴍᴇᴛᴀᴅᴀᴛᴀ ᴏɴ ✅', callback_data='metadata_1')], [
-    InlineKeyboardButton('ꜱᴇᴛ ᴄᴜꜱᴛᴏᴍ ᴍᴇᴛᴀᴅᴀᴛᴀ', callback_data='cutom_metadata')]]
-OFF = [[InlineKeyboardButton('ᴍᴇᴛᴀᴅᴀᴛᴀ ᴏꜰꜰ ❌', callback_data='metadata_0')], [
-    InlineKeyboardButton('ꜱᴇᴛ ᴄᴜꜱᴛᴏᴍ ᴍᴇᴛᴀᴅᴀᴛᴀ', callback_data='cutom_metadata')]]
-
+def get_metadata_markup(bool_metadata):
+    if bool_metadata:
+        return InlineKeyboardMarkup([
+            [InlineKeyboardButton('ꜱᴇᴛ ᴍᴇᴛᴀᴅᴀᴛᴀ', callback_data='custom_metadata'),
+             InlineKeyboardButton('ᴀᴅᴅ ʏᴏᴜʀ ꜱɪᴛᴇ', callback_data='add_site')],
+            [InlineKeyboardButton('ᴍᴇᴛᴀᴅᴀᴛᴀ ᴏɴ ✔', callback_data='metadata_0')]
+        ])
+    else:
+        return InlineKeyboardMarkup([
+            [InlineKeyboardButton('ꜱᴇᴛ ᴍᴇᴛᴀᴅᴀᴛᴀ', callback_data='custom_metadata'),
+             InlineKeyboardButton('ᴀᴅᴅ ʏᴏᴜʀ ꜱɪᴛᴇ', callback_data='add_site')],
+            [InlineKeyboardButton('ᴍᴇᴛᴀᴅᴀᴛᴀ ᴏꜰꜰ ❌', callback_data='metadata_1')]
+        ])
 
 @Client.on_message(filters.private & filters.command('metadata'))
 async def handle_metadata(bot: Client, message: Message):
     ms = await message.reply_text("**ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ...**", reply_to_message_id=message.id)
-    bool_metadata = find(int(message.chat.id))[2]
-    user_metadata = find(int(message.chat.id))[3]
+    user_id = int(message.chat.id)
+    
+    user_data = find(user_id)
+    bool_metadata = user_data[2] if len(user_data) > 2 else False
+    user_metadata_code = user_data[3] if len(user_data) > 3 and user_data[3] else "Not Set"
+    user_site = user_data[4] if len(user_data) > 4 and user_data[4] else "Not Set"
+    
     await ms.delete()
-    if bool_metadata:
-        return await message.reply_text(f"**ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ᴍᴇᴛᴀᴅᴀᴛᴀ :-**\n\n➜ `{user_metadata}` ", quote=True, reply_markup=InlineKeyboardMarkup(ON))
-    return await message.reply_text(f"**ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ᴍᴇᴛᴀᴅᴀᴛᴀ :-**\n\n➜ `{user_metadata}` ", quote=True, reply_markup=InlineKeyboardMarkup(OFF))
+    
+    text = (
+        f"<b>ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ᴍᴇᴛᴀᴅᴀᴛᴀ :- </b> ❞\n\n"
+        f"• {user_metadata_code}\n\n"
+        f"<b>ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ꜱɪᴛᴇ :- </b>\n\n"
+        f"• {user_site}"
+    )
+    
+    await message.reply_text(text, quote=True, reply_markup=get_metadata_markup(bool_metadata), disable_web_page_preview=True)
 
 
-@Client.on_callback_query(filters.regex('.*?(custom_metadata|metadata).*?'))
+@Client.on_callback_query(filters.regex('.*?(custom_metadata|metadata|add_site).*?'))
 async def query_metadata(bot: Client, query: CallbackQuery):
     data = query.data
+    user_id = int(query.message.chat.id)
+    user_data = find(user_id)
+    
+    bool_metadata = user_data[2] if len(user_data) > 2 else False
+    user_metadata_code = user_data[3] if len(user_data) > 3 and user_data[3] else "Not Set"
+    user_site = user_data[4] if len(user_data) > 4 and user_data[4] else "Not Set"
+
+    text = (
+        f"<b>ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ᴍᴇᴛᴀᴅᴀᴛᴀ :- </b> ❞\n\n"
+        f"• {user_metadata_code}\n\n"
+        f"<b>ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ꜱɪᴛᴇ :- </b>\n\n"
+        f"• {user_site}"
+    )
 
     if data.startswith('metadata_'):
         _bool = data.split('_')[1]
-        user_metadata = find(int(query.message.chat.id))[3]
 
         if bool(eval(_bool)):
-            setmeta(int(query.message.chat.id), bool_meta=False)
-            await query.message.edit(f"**ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ᴍᴇᴛᴀᴅᴀᴛᴀ :-**\n\n➜ `{user_metadata}` ", reply_markup=InlineKeyboardMarkup(OFF))
-
+            setmeta(user_id, bool_meta=False)
+            await query.message.edit_text(text, reply_markup=get_metadata_markup(False), disable_web_page_preview=True)
         else:
-            setmeta(int(query.message.chat.id), bool_meta=True)
-            await query.message.edit(f"**ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ᴍᴇᴛᴀᴅᴀᴛᴀ :-**\n\n➜ `{user_metadata}` ", reply_markup=InlineKeyboardMarkup(ON))
+            setmeta(user_id, bool_meta=True)
+            await query.message.edit_text(text, reply_markup=get_metadata_markup(True), disable_web_page_preview=True)
 
-    elif data == 'cutom_metadata':
+    elif data == 'custom_metadata':
         await query.message.delete()
         try:
             try:
-                metadata = await bot.ask(text=script.METADATA_TXT, chat_id=query.from_user.id, filters=filters.text, timeout=30, disable_web_page_preview=True, reply_to_message_id=query.message.id)
+                metadata = await bot.ask(
+                    text="**ꜱᴇɴᴅ ʏᴏᴜʀ ᴄᴜꜱᴛᴏᴍ ᴍᴇᴛᴀᴅᴀᴛᴀ ᴄᴏᴅᴇ...\n\nᴇxᴀᴍᴘʟᴇ:- ʙʏ:- @ᴜɴʀᴀᴛᴇᴅ_ᴄᴏᴅᴇʀ\n\n_ᴛʏᴩᴇ /ᴄᴀɴᴄᴇʟ ᴛᴏ ꜱᴛᴏᴩ._**", 
+                    chat_id=query.from_user.id, 
+                    filters=filters.text, 
+                    timeout=30, 
+                    disable_web_page_preview=True, 
+                    reply_to_message_id=query.message.id
+                )
             except ListenerTimeout:
                 await query.message.reply_text("⚠️ ᴇʀʀᴏʀ !!\n\n**ʀᴇǫᴜᴇꜱᴛ ᴛɪᴍᴇᴅ ᴏᴜᴛ.**\n\nʀᴇꜱᴛᴀʀᴛ ʙʏ ᴜꜱɪɴɢ /metadata", reply_to_message_id=query.message.id)
                 return
-            print(metadata.text)
+            
+            if metadata.text.lower() == '/cancel':
+                return await metadata.reply_text("ᴘʀᴏᴄᴇꜱꜱ ᴄᴀɴᴄᴇʟʟᴇᴅ.")
+                
             ms = await query.message.reply_text("**ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ...**", reply_to_message_id=metadata.id)
-            setmetacode(int(query.message.chat.id), metadata_code=metadata.text)
+            setmetacode(user_id, metadata_code=metadata.text)
             await ms.edit("**ʏᴏᴜʀ ᴍᴇᴛᴀᴅᴀᴛᴀ ᴄᴏᴅᴇ ꜱᴇᴛ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ✅**")
+        except Exception as e:
+            print(e)
+
+    elif data == 'add_site':
+        await query.message.delete()
+        try:
+            try:
+                site_msg = await bot.ask(
+                    text="**ꜱᴇɴᴅ ʏᴏᴜʀ ꜱɪᴛᴇ ᴜʀʟ ᴏʀ ɴᴀᴍᴇ ᴛᴏ ꜱᴇᴛ ɪɴ ᴍᴇᴛᴀᴅᴀᴛᴀ\n\nᴇxᴀᴍᴘʟᴇ:- ʜᴛᴛᴩꜱ://ᴡᴡᴡ.ᴀɴɪʀᴇᴀʟ-ᴀɴɪᴍᴇ.ᴛᴏᴩ/\n\n_ᴛʏᴩᴇ /ᴄᴀɴᴄᴇʟ ᴛᴏ ꜱᴛᴏᴩ._**", 
+                    chat_id=query.from_user.id, 
+                    filters=filters.text, 
+                    timeout=30, 
+                    disable_web_page_preview=True, 
+                    reply_to_message_id=query.message.id
+                )
+            except ListenerTimeout:
+                await query.message.reply_text("⚠️ ᴇʀʀᴏʀ !!\n\n**ʀᴇǫᴜᴇꜱᴛ ᴛɪᴍᴇᴅ ᴏᴜᴛ.**\n\nʀᴇꜱᴛᴀʀᴛ ʙʏ ᴜꜱɪɴɢ /metadata", reply_to_message_id=query.message.id)
+                return
+            
+            if site_msg.text.lower() == '/cancel':
+                return await site_msg.reply_text("ᴘʀᴏᴄᴇꜱꜱ ᴄᴀɴᴄᴇʟʟᴇᴅ.")
+                
+            ms = await query.message.reply_text("**ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ...**", reply_to_message_id=site_msg.id)
+            await ms.edit("**ʏᴏᴜʀ ꜱɪᴛᴇ ꜱᴇᴛ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ✅**")
         except Exception as e:
             print(e)
 
@@ -88,7 +152,7 @@ async def donate_callback(bot: Client, query: CallbackQuery):
 
 @Client.on_message(filters.private & filters.command('spoiler'))
 async def spoiler_settings(bot: Client, message: Message):
-    is_spoiler = False  # Replace with database function if available
+    is_spoiler = False  
     
     status_text = "ᴇɴᴀʙʟᴇᴅ" if is_spoiler else "ᴅɪꜱᴀʙʟᴇᴅ"
     btn_text = "ᴅɪꜱᴀʙʟᴇ ꜱᴘᴏɪʟᴇʀ" if is_spoiler else "ᴇɴᴀʙʟᴇ ꜱᴘᴏɪʟᴇʀ"
