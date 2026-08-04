@@ -12,10 +12,8 @@ from helper.progress import humanbytes
 from helper.set import escape_invalid_curly_brackets
 from config import *
 
-app = Client("JishuBotz", api_id=API_ID, api_hash=API_HASH, session_string=STRING_SESSION)
-
-
-
+# Main bot-ல் இருந்து userbot client-ஐக் கொண்டு வருதல்
+from bot import userbot as app
 
 
 @Client.on_callback_query(filters.regex('cancel'))
@@ -28,7 +26,6 @@ async def cancel(bot, update):
         await update.message.delete()
         await update.message.continue_propagation()
         return
-
 
 
 @Client.on_callback_query(filters.regex('rename'))
@@ -44,11 +41,9 @@ async def rename(bot, update):
     dateupdate(chat_id, date)
 
 
-
 @Client.on_callback_query(filters.regex("doc"))
 async def doc(bot, update):
 
-    # Creating Directory for Metadata
     if not os.path.isdir("Metadata"):
         os.mkdir("Metadata")
 
@@ -72,10 +67,9 @@ async def doc(bot, update):
     except Exception as e:
         neg_used = used - int(file.file_size)
         used_limit(update.from_user.id, neg_used)
-        await ms.edit(e)
+        await ms.edit(str(e))
         return
     
-    # Metadata Adding Code
     _bool_metadata = find(int(message.chat.id))[2] 
     
     if _bool_metadata:
@@ -118,28 +112,28 @@ async def doc(bot, update):
     if value < file.file_size:
         await ms.edit("🚀 Try To Upload...  ⚡")
         try:
-            filw = await app.send_document(LOG_CHANNEL, document=metadata_path if _bool_metadata else file_path, thumb=ph_path, caption=caption, progress=progress_for_pyrogram, progress_args=("🚀 Try To Uploading...  ⚡",  ms, c_time))
+            client_to_use = app if app else bot
+            filw = await client_to_use.send_document(int(LOG_CHANNEL), document=metadata_path if _bool_metadata else file_path, thumb=ph_path, caption=caption, progress=progress_for_pyrogram, progress_args=("🚀 Try To Uploading...  ⚡",  ms, c_time))
             from_chat = filw.chat.id
             mg_id = filw.id
             time.sleep(2)
             await bot.copy_message(update.from_user.id, from_chat, mg_id)
             await ms.delete()
             
-            os.remove(file_path)
-            try:
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            if ph_path and os.path.exists(ph_path):
                 os.remove(ph_path)
-            except:
-                pass
             
         except Exception as e:
             neg_used = used - int(file.file_size)
             used_limit(update.from_user.id, neg_used)
-            await ms.edit(e)
-            os.remove(file_path)
-            try:
+            await ms.edit(str(e))
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            if ph_path and os.path.exists(ph_path):
                 os.remove(ph_path)
-            except:
-                return
+            return
     else:
         await ms.edit("🚀 Try To Upload...  ⚡")
         c_time = time.time()
@@ -147,20 +141,21 @@ async def doc(bot, update):
             await bot.send_document(update.from_user.id, document=metadata_path if _bool_metadata else file_path, thumb=ph_path, caption=caption, progress=progress_for_pyrogram, progress_args=("🚀 Try To Uploading...  ⚡",  ms, c_time))
             await ms.delete()
             
-            os.remove(file_path)
+            if os.path.exists(file_path):
+                os.remove(file_path)
             
         except Exception as e:
             neg_used = used - int(file.file_size)
             used_limit(update.from_user.id, neg_used)
-            await ms.edit(e)
-            os.remove(file_path)
+            await ms.edit(str(e))
+            if os.path.exists(file_path):
+                os.remove(file_path)
             return
 
 
 @Client.on_callback_query(filters.regex("vid"))
 async def vid(bot, update):
 
-    # Creating Directory for Metadata
     if not os.path.isdir("Metadata"):
         os.mkdir("Metadata")
 
@@ -185,10 +180,9 @@ async def vid(bot, update):
     except Exception as e:
         neg_used = used - int(file.file_size)
         used_limit(update.from_user.id, neg_used)
-        await ms.edit(e)
+        await ms.edit(str(e))
         return
     
-    # Metadata Adding Code
     _bool_metadata = find(int(message.chat.id))[2] 
     
     if _bool_metadata:
@@ -212,7 +206,7 @@ async def vid(bot, update):
 
     duration = 0
     metadata = extractMetadata(createParser(file_path))
-    if metadata.has("duration"):
+    if metadata and metadata.has("duration"):
         duration = metadata.get('duration').seconds
     if c_caption:
         vid_list = ["filename", "filesize", "duration"]
@@ -231,38 +225,37 @@ async def vid(bot, update):
 
     else:
         try:
-            ph_path_ = await take_screen_shot(file_path, os.path.dirname(os.path.abspath(file_path)), random.randint(0, duration - 1))
+            ph_path_ = await take_screen_shot(file_path, os.path.dirname(os.path.abspath(file_path)), random.randint(0, max(0, duration - 1)))
             width, height, ph_path = await fix_thumb(ph_path_)
         except Exception as e:
             ph_path = None
-            print(e)
 
     value = 2090000000
     if value < file.file_size:
         await ms.edit("🚀 Try To Upload...  ⚡")
         try:
-            filw = await app.send_video(LOG_CHANNEL, video=metadata_path if _bool_metadata else file_path, thumb=ph_path, duration=duration, caption=caption, progress=progress_for_pyrogram, progress_args=("🚀 Try To Uploading...  ⚡",  ms, c_time))
+            client_to_use = app if app else bot
+            filw = await client_to_use.send_video(int(LOG_CHANNEL), video=metadata_path if _bool_metadata else file_path, thumb=ph_path, duration=duration, caption=caption, progress=progress_for_pyrogram, progress_args=("🚀 Try To Uploading...  ⚡",  ms, c_time))
             from_chat = filw.chat.id
             mg_id = filw.id
             time.sleep(2)
             await bot.copy_message(update.from_user.id, from_chat, mg_id)
             await ms.delete()
             
-            os.remove(file_path)
-            try:
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            if ph_path and os.path.exists(ph_path):
                 os.remove(ph_path)
-            except:
-                pass
                 
         except Exception as e:
             neg_used = used - int(file.file_size)
             used_limit(update.from_user.id, neg_used)
-            await ms.edit(e)
-            os.remove(file_path)
-            try:
+            await ms.edit(str(e))
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            if ph_path and os.path.exists(ph_path):
                 os.remove(ph_path)
-            except:
-                return
+            return
     else:
         await ms.edit("🚀 Try To Upload...  ⚡")
         c_time = time.time()
@@ -270,20 +263,21 @@ async def vid(bot, update):
             await bot.send_video(update.from_user.id, video=metadata_path if _bool_metadata else file_path, thumb=ph_path, duration=duration, caption=caption, progress=progress_for_pyrogram, progress_args=("🚀 Try To Uploading...  ⚡",  ms, c_time))
             await ms.delete()
             
-            os.remove(file_path)
+            if os.path.exists(file_path):
+                os.remove(file_path)
             
         except Exception as e:
             neg_used = used - int(file.file_size)
             used_limit(update.from_user.id, neg_used)
-            await ms.edit(e)
-            os.remove(file_path)
+            await ms.edit(str(e))
+            if os.path.exists(file_path):
+                os.remove(file_path)
             return
 
 
 @Client.on_callback_query(filters.regex("aud"))
 async def aud(bot, update):
 
-    # Creating Directory for Metadata
     if not os.path.isdir("Metadata"):
         os.mkdir("Metadata")
 
@@ -305,10 +299,9 @@ async def aud(bot, update):
     except Exception as e:
         neg_used = used - int(file.file_size)
         used_limit(update.from_user.id, neg_used)
-        await ms.edit(e)
+        await ms.edit(str(e))
         return
     
-    # Metadata Adding Code
     _bool_metadata = find(int(message.chat.id))[2] 
     
     if _bool_metadata:
@@ -324,7 +317,7 @@ async def aud(bot, update):
     os.rename(old_file_name, file_path)
     duration = 0
     metadata = extractMetadata(createParser(file_path))
-    if metadata.has("duration"):
+    if metadata and metadata.has("duration"):
         duration = metadata.get('duration').seconds
     user_id = int(update.message.chat.id)
     data = find(user_id)
@@ -350,15 +343,19 @@ async def aud(bot, update):
             await bot.send_audio(update.message.chat.id, audio=metadata_path if _bool_metadata else file_path, caption=caption, thumb=ph_path, duration=duration, progress=progress_for_pyrogram, progress_args=("🚀 Try To Uploading...  ⚡",  ms, c_time))
             await ms.delete()
             
-            os.remove(file_path)
-            os.remove(ph_path)
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            if os.path.exists(ph_path):
+                os.remove(ph_path)
             
         except Exception as e:
             neg_used = used - int(file.file_size)
             used_limit(update.from_user.id, neg_used)
-            await ms.edit(e)
-            os.remove(file_path)
-            os.remove(ph_path)
+            await ms.edit(str(e))
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            if os.path.exists(ph_path):
+                os.remove(ph_path)
     else:
         await ms.edit("🚀 Try To Upload...  ⚡")
         c_time = time.time()
@@ -366,21 +363,12 @@ async def aud(bot, update):
             await bot.send_audio(update.message.chat.id, audio=metadata_path if _bool_metadata else file_path, caption=caption, duration=duration, progress=progress_for_pyrogram, progress_args=("🚀 Try To Uploading...  ⚡",  ms, c_time))
             await ms.delete()
             
-            os.remove(file_path)
+            if os.path.exists(file_path):
+                os.remove(file_path)
             
         except Exception as e:
-            await ms.edit(e)
+            await ms.edit(str(e))
             neg_used = used - int(file.file_size)
             used_limit(update.from_user.id, neg_used)
-            os.remove(file_path)
-
-
-
-
-
-
-# Jishu Developer 
-# Don't Remove Credit 🥺
-# Telegram Channel @Madflix_Bots
-# Back-Up Channel @JishuBotz
-# Developer @JishuDeveloper & @MadflixOfficials
+            if os.path.exists(file_path):
+                os.remove(file_path)
