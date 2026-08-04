@@ -1,5 +1,5 @@
 Pyrofork==2.3.69
-pyromod==1.5
+git+https://github.com/pyromod/pyromod.git
 humanize
 pymongo
 Pillow
