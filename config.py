@@ -36,7 +36,7 @@ FORCE_SUB_PIC = os.environ.get(
 # Text Messages Config
 START_TXT = os.environ.get(
     "START_TXT", 
-    "<b>Hello {mention} 👋\n\nI Am An Advanced File Renamer Bot With 4GB Support & Custom Thumbnail Support!</b>"
+    "<b>Hᴇʏ {mention},!</b><b><blockquote>\nWᴇʟᴄᴏᴍᴇ Tᴏ Tʜᴇ Mᴏsᴛ Aᴅᴠᴀɴᴄᴇᴅ Rᴇɴᴀᴍᴇ Bᴏᴛ!</blockquote></b>"
 )
 
 HELP_TXT = os.environ.get(
