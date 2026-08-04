@@ -1,4 +1,4 @@
-Import pymongo
+import pymongo
 import os
 from helper.date import add_date
 from config import DATABASE_URL as DB_URL, DATABASE_NAME as DB_NAME
