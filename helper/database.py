@@ -39,9 +39,24 @@ def total_size(chat_id, total_size, now_file_size):
 # Insert User Data
 def insert(chat_id):
     user_id = int(chat_id)
-    user_det = {"_id": user_id, "file_id": None, "caption": None, "daily": 0, "date": 0,
-                "uploadlimit": 5368709120, "used_limit": 0, "usertype": "Free", "prexdate": None,
-                "metadata": False, "metadata_code": "By @Madflix_Bots"}
+    user_det = {
+        "_id": user_id, 
+        "file_id": None, 
+        "caption": None, 
+        "daily": 0, 
+        "date": 0,
+        "uploadlimit": 5368709120, 
+        "used_limit": 0, 
+        "usertype": "Free", 
+        "prexdate": None,
+        "metadata": False, 
+        "metadata_code": "By @Madflix_Bots",
+        "rename_mode": "FILENAME",       # Added for UI settings support
+        "main_thumb": True,               # Added for UI settings support
+        "quality_thumbs": "Off",          # Added for UI settings support
+        "copy_source_thumb": False,       # Added for UI settings support
+        "format": "{filename}"            # Added for UI settings support
+    }
     try:
         dbcol.insert_one(user_det)
     except:
@@ -57,8 +72,6 @@ def delthumb(chat_id):
     dbcol.update_one({"_id": chat_id}, {"$set": {"file_id": None}})
 
 
-
-
 # ============= Metadata Function Code =============== #
 
 def setmeta(chat_id, bool_meta):
@@ -70,14 +83,12 @@ def setmetacode(chat_id, metadata_code):
 # ============= Metadata Function Code =============== #
 
 
-
 # Add Caption Data
 def addcaption(chat_id, caption):
     dbcol.update_one({"_id": chat_id}, {"$set": {"caption": caption}})
 
 def delcaption(chat_id):
     dbcol.update_one({"_id": chat_id}, {"$set": {"caption": None}})
-
 
 
 def dateupdate(chat_id, date):
@@ -108,7 +119,7 @@ def find(chat_id):
     id = {"_id": chat_id}
     x = dbcol.find(id)
     for i in x:
-        file = i["file_id"]
+        file = i.get("file_id")
         try:
             caption = i["caption"]
         except:
@@ -122,8 +133,6 @@ def find(chat_id):
         except:
             metadata_code = None
             
-
-
         return [file, caption, metadata, metadata_code]
 
 def getid():
@@ -138,3 +147,30 @@ def delete(id):
 
 def find_one(id):
     return dbcol.find_one({"_id": id})
+
+
+# ============= Missing UI Settings Functions Added ============= #
+
+async def get_user_settings(user_id):
+    user = dbcol.find_one({"_id": user_id})
+    if not user:
+        # Default settings if user not found in DB
+        return {
+            "rename_mode": "FILENAME",
+            "main_thumb": True,
+            "quality_thumbs": "Off",
+            "copy_source_thumb": False,
+            "format": "{filename}",
+            "caption": user.get("caption") if user else None
+        }
+    return {
+        "rename_mode": user.get("rename_mode", "FILENAME"),
+        "main_thumb": user.get("main_thumb", True),
+        "quality_thumbs": user.get("quality_thumbs", "Off"),
+        "copy_source_thumb": user.get("copy_source_thumb", False),
+        "format": user.get("format", "{filename}"),
+        "caption": user.get("caption")
+    }
+
+async def update_user_setting(user_id, key, value):
+    dbcol.update_one({"_id": user_id}, {"$set": {key: value}})
