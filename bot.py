@@ -5,7 +5,6 @@ import sys
 from flask import Flask
 from threading import Thread
 from pyrogram import Client, idle
-from plugins.cb_data import app as Client2
 from config import *
 import pyromod
 
@@ -32,7 +31,7 @@ def run_flask():
     port = int(os.environ.get("PORT", 8080))
     web_app.run(host='0.0.0.0', port=port)
 
-# 3. Initialize Main Bot Client with in_memory=True (Clears Peer Cache)
+# 3. Initialize Main Bot Client
 bot = Client(
     "Renamer",
     bot_token=BOT_TOKEN,
@@ -42,6 +41,18 @@ bot = Client(
     in_memory=True
 )
 
+# 4. Userbot (STRING_SESSION) Client
+if STRING_SESSION:
+    userbot = Client(
+        "JishuUserbot",
+        api_id=API_ID,
+        api_hash=API_HASH,
+        session_string=STRING_SESSION,
+        in_memory=True
+    )
+else:
+    userbot = None
+
 async def main():
     # Web Server Thread
     t = Thread(target=run_flask)
@@ -49,23 +60,22 @@ async def main():
     t.start()
     logger.info("Web Server Started Successfully!")
 
-    if STRING_SESSION:
-        # Userbot Client Cache reset
-        Client2.in_memory = True
-        
-        await Client2.start()
-        await bot.start()
-        
-        logger.info("Bot and Userbot Started Successfully!")
-        await idle()
-        
-        await Client2.stop()
-        await bot.stop()
-    else:
-        await bot.start()
-        logger.info("Bot Started Successfully!")
-        await idle()
-        await bot.stop()
+    await bot.start()
+    logger.info("Bot Started Successfully!")
+
+    if userbot:
+        await userbot.start()
+        logger.info("Userbot Started Successfully!")
+
+    await idle()
+
+    await bot.stop()
+    if userbot:
+        await userbot.stop()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    loop = asyncio.get_event_loop()
+    try:
+        loop.run_until_complete(main())
+    except KeyboardInterrupt:
+        pass
