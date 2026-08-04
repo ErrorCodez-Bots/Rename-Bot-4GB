@@ -43,22 +43,22 @@ HELP_TXT = os.environ.get(
     "HELP_TXT", 
     """<b>• AVAILABLE COMMANDS</b>
 
-<b>👤 USER COMMANDS :-</b>
-• /start - Check If The Bot Is Running.
-• /viewthumb - To View Current Thumbnail.
-• /delthumb - To Delete Current Thumbnail.
-• /set_caption - To Set A Custom Caption.
-• /see_caption - See Your Custom Caption.
-• /del_caption - Delete Custom Caption.
-• /ping - Check Bot Ping.
-• /donate - Support Developer.
+<b><blockquote>Usᴇʀ Cᴏᴍᴍᴀɴᴅs :-</blockquote></b>
+<b><blockquote>• /start - ᴄʜᴇᴄᴋ ɪғ ᴛʜᴇ ʙᴏᴛ ɪs ʀᴜɴɴɪɴɢ.
+• /viewthumb - ᴛᴏ ᴠɪᴇᴡ ᴄᴜʀʀᴇɴᴛ ᴛʜᴜᴍʙɴᴀɪʟ.
+• /delthumb - ᴛᴏ ᴅᴇʟᴇᴛᴇ ᴄᴜʀʀᴇɴᴛ ᴛʜᴜᴍʙɴᴀɪʟ.
+• /set_caption - ᴛᴏ sᴇᴛ ᴀ ᴄᴜsᴛᴏᴍ ᴄᴀᴘᴛɪᴏɴ.
+• /see_caption - sᴇᴇ ʏᴏᴜʀ ᴄᴜsᴛᴏᴍ ᴄᴀᴘᴛɪᴏɴ.
+• /del_caption - ᴅᴇʟᴇᴛᴇ ᴄᴜsᴛᴏᴍ ᴄᴀᴘᴛɪᴏɴ.
+• /ping - ᴄʜᴇᴄᴋ ʙᴏᴛ ᴘɪɴɢ.
+• /donate - sᴜᴘᴘᴏʀᴛ ᴅᴇᴠᴇʟᴏᴘᴇʀ.</blockquote></b>
 
-<b>👑 ADMIN COMMANDS :-</b>
-• /users - See Total Users.
-• /allids - See All Users IDs List.
-• /broadcast - Message Broadcast Command.
-• /warn - Send A Message To A User.
-• /restart - Cancel All Process And Restart The Bot."""
+<b>Aᴅᴍɪɴ Cᴏᴍᴍᴀɴᴅs :-</b>
+<b><blockquote>• /users - sᴇᴇ ᴛᴏᴛᴀʟ ᴜsᴇʀs.
+• /allids - sᴇᴇ ᴀʟʟ ᴜsᴇʀs ɪᴅ's ʟɪsᴛ.
+• /broadcast - ᴍᴇssᴀɢᴇ ʙʀᴏᴀᴅᴄᴀsᴛ ᴄᴏᴍᴍᴀɴᴅ.
+• /warn - sᴇɴᴅ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ᴀ ᴜsᴇʀ.
+• /restart - ᴄᴀɴᴄᴇʟ ᴀʟʟ ᴘʀᴏᴄᴇss ᴀɴᴅ ʀᴇsᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ.</blockquote></b>"""
 )
 
 DONATE_TXT = os.environ.get(
