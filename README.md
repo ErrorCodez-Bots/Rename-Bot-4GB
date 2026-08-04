@@ -1,5 +1,6 @@
 <p align="center">
-<img src="https://telegra.ph/file/af55c59f0f9b60da423ab.jpg" alt="ganyu" />
+<img src="https://telegra.ph/file/af55c59f0f9b60da423ab.jpg" alt="Ganyu" width="100%">
+</p>
 
 <h2 align="center">
   ─「 ʀᴇɴᴀᴍᴇ  ʙᴏᴛ 」─
