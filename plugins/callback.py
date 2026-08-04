@@ -1,9 +1,10 @@
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
+import os
 from pyrogram import Client, filters
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 from database.database import get_user_settings, update_user_setting
 from config import *
 
-@Client.on_callback_query(filters.regex('^(home|more|panel|meta_config|rename_mode|thumbnails|caption|format|set_rename_|set_thumb_|close)$'))
+@Client.on_callback_query(filters.regex('^(home|more|panel|meta_config|rename_mode|thumbnails|caption|format|set_rename_|set_thumb_|help|donate|close)$'))
 async def cb_handler(bot, query: CallbackQuery):
     data = query.data
     user_id = query.from_user.id
@@ -167,6 +168,35 @@ async def cb_handler(bot, query: CallbackQuery):
         ])
         await query.message.edit_text(text=text, reply_markup=keyboard)
 
-    # 9. CLOSE
+    # 9. HELP MENU
+    elif data == "help":
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("« ʙᴀᴄᴋ", callback_data="home"),
+             InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close")]
+        ])
+        await query.message.edit_text(
+            text=HELP_TXT,
+            reply_markup=keyboard,
+            disable_web_page_preview=True
+        )
+
+    # 10. DONATE MENU
+    elif data == "donate":
+        # Dynamic admin link generation using the ADMIN ID or Username configured in config.py
+        admin_val = globals().get('ADMIN', '')
+        admin_url = f"tg://openmessage?user_id={admin_val}" if str(admin_val).isdigit() else f"https://t.me/{str(admin_val).replace('@', '')}"
+        
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🦋 ᴀᴅᴍɪɴ", url=admin_url)],
+            [InlineKeyboardButton("« ʙᴀᴄᴋ", callback_data="home"),
+             InlineKeyboardButton("❌ ᴄʟᴏꜱᴇ", callback_data="close")]
+        ])
+        await query.message.edit_text(
+            text=DONATE_TXT,
+            reply_markup=keyboard,
+            disable_web_page_preview=True
+        )
+
+    # 11. CLOSE
     elif data == "close":
         await query.message.delete()
