@@ -23,10 +23,10 @@ START_PIC = os.environ.get("START_PIC", "https://graph.org/file/ad48ac09b1e6f30d
 # 4 Random Start/Menu Pictures Config
 START_PICS = os.environ.get(
     "START_PICS", 
-    "https://graph.org/file/ad48ac09b1e6f30d2dae4.jpg "
-    "https://graph.org/file/f26038a39d4e2849c4021.jpg "
-    "https://graph.org/file/857e17c0f162c93d258b6.jpg "
-    "https://graph.org/file/988c5d9a941a87e5b1cb3.jpg"
+    "https://telegra.ph/file/38b19268c6424685a47e8-969d80039409153c58.jpg "
+    "https://telegra.ph/file/bdd491cce912cc3655cf3-df10e7c616bd15b6f1.jpg "
+    "https://telegra.ph/file/4bbe2d8317dfb08f84983-8157695dd5656d2db1.jpg "
+    "https://telegra.ph/file/b73ca7b6b7ae5cc29ff93-8db248b9c3262c0441.jpg"
 ).split()
 
 # Updates Channel Link Config
