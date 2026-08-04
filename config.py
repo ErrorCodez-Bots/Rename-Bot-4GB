@@ -17,8 +17,17 @@ LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", ""))
 DATABASE_URL = os.environ.get("DATABASE_URL", "")
 DATABASE_NAME = os.environ.get("DATABASE_NAME", "madflixbotz")
 
-# Other Variables Config
+# Single Start Picture (Fallback)
 START_PIC = os.environ.get("START_PIC", "https://graph.org/file/ad48ac09b1e6f30d2dae4.jpg")
+
+# 4 Random Start/Menu Pictures Config
+START_PICS = os.environ.get(
+    "START_PICS", 
+    "https://graph.org/file/ad48ac09b1e6f30d2dae4.jpg "
+    "https://graph.org/file/f26038a39d4e2849c4021.jpg "
+    "https://graph.org/file/857e17c0f162c93d258b6.jpg "
+    "https://graph.org/file/988c5d9a941a87e5b1cb3.jpg"
+).split()
 
 # Updates Channel Link Config
 UPDATE_CHANNEL = os.environ.get("UPDATE_CHANNEL", "https://t.me/ST_Rename_Update")
@@ -26,49 +35,65 @@ UPDATE_CHANNEL = os.environ.get("UPDATE_CHANNEL", "https://t.me/ST_Rename_Update
 # Force Sub Message & Picture Config
 FORCE_SUB_TXT = os.environ.get(
     "FORCE_SUB_TXT", 
-    "<b>Hello {first_name} 👋\n\nYou Need To Join In My Channel To Use Me.\n\nKindly Please Join Channel Below!</b>"
+    "<b>ʜᴇʟʟᴏ {first_name} 👋\n\nʏᴏᴜ ɴᴇᴇᴅ ᴛᴏ ᴊᴏɪɴ ɪɴ ᴍʏ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜꜱᴇ ᴍᴇ.\n\nᴋɪɴᴅʟʏ ᴘʟᴇᴀꜱᴇ ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ ʙᴇʟᴏᴡ!</b>"
 )
 FORCE_SUB_PIC = os.environ.get(
     "FORCE_SUB_PIC", 
     "https://graph.org/file/ad48ac09b1e6f30d2dae4.jpg"
 )
 
-# Text Messages Config
+# Text Messages Config in Small Caps (SMLCAPS)
 START_TXT = os.environ.get(
     "START_TXT", 
-    "<b>Hᴇʏ {mention},!</b><b><blockquote>\nWᴇʟᴄᴏᴍᴇ Tᴏ Tʜᴇ Mᴏsᴛ Aᴅᴠᴀɴᴄᴇᴅ Rᴇɴᴀᴍᴇ Bᴏᴛ!</blockquote></b>"
+    "<b>ʜᴇʏ, {mention}! ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ ᴍᴏꜱᴛ ᴀᴅᴠᴀɴᴄᴇᴅ ʀᴇɴᴀᴍᴇ ʙᴏᴛ!</b>\n\n"
+    "<blockquote><b>ᴡɪᴛʜ ᴍʏ ᴘᴏᴡᴇʀꜰᴜʟ ꜰᴇᴀᴛᴜʀᴇꜱ, ʏᴏᴜ ᴄᴀɴ:-\n"
+    "ᴀᴜᴛᴏʀᴇɴᴀᴍᴇ ꜰɪʟᴇꜱ ᴡɪᴛʜ ᴄᴜꜱᴛᴏᴍ ꜰᴏʀᴍᴀᴛꜱ.-\n"
+    "ᴀᴅᴅ ᴄᴀᴘᴛɪᴏɴꜱ ᴏʀ ꜱᴇʟᴇᴄᴛ ᴛʜᴜᴍʙɴᴀɪʟꜱ.-\n"
+    "ᴘʀᴏᴄᴇꜱꜱ ꜰɪʟᴇꜱ ꜱᴇǫᴜᴇɴᴛɪᴀʟʟʏ ꜰᴏʀ ꜱᴍᴏᴏᴛʜ ᴡᴏʀᴋꜰʟᴏᴡ.</b></blockquote>\n\n"
+    "<blockquote><b>🔷 ʀᴇᴀᴅʏ ᴛᴏ ʙᴇɢɪɴ? ᴊᴜꜱᴛ ꜱᴇɴᴅ ᴍᴇ ᴀɴʏ ꜰɪʟᴇ!\n"
+    "🔷 ꜰᴏʀ ᴅᴇᴛᴀɪʟꜱ, ᴛᴀᴘ ᴛʜᴇ ʜᴇʟᴘ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ.</b></blockquote>"
 )
 
 HELP_TXT = os.environ.get(
     "HELP_TXT", 
-    """<b>• AVAILABLE COMMANDS</b>
-
-<b><blockquote>Usᴇʀ Cᴏᴍᴍᴀɴᴅs :-</blockquote></b>
-<b><blockquote>• /start - ᴄʜᴇᴄᴋ ɪғ ᴛʜᴇ ʙᴏᴛ ɪs ʀᴜɴɴɪɴɢ.
-• /viewthumb - ᴛᴏ ᴠɪᴇᴡ ᴄᴜʀʀᴇɴᴛ ᴛʜᴜᴍʙɴᴀɪʟ.
-• /delthumb - ᴛᴏ ᴅᴇʟᴇᴛᴇ ᴄᴜʀʀᴇɴᴛ ᴛʜᴜᴍʙɴᴀɪʟ.
-• /set_caption - ᴛᴏ sᴇᴛ ᴀ ᴄᴜsᴛᴏᴍ ᴄᴀᴘᴛɪᴏɴ.
-• /see_caption - sᴇᴇ ʏᴏᴜʀ ᴄᴜsᴛᴏᴍ ᴄᴀᴘᴛɪᴏɴ.
-• /del_caption - ᴅᴇʟᴇᴛᴇ ᴄᴜsᴛᴏᴍ ᴄᴀᴘᴛɪᴏɴ.
-• /ping - ᴄʜᴇᴄᴋ ʙᴏᴛ ᴘɪɴɢ.
-• /donate - sᴜᴘᴘᴏʀᴛ ᴅᴇᴠᴇʟᴏᴘᴇʀ.</blockquote></b>
-
-<b>Aᴅᴍɪɴ Cᴏᴍᴍᴀɴᴅs :-</b>
-<b><blockquote>• /users - sᴇᴇ ᴛᴏᴛᴀʟ ᴜsᴇʀs.
-• /allids - sᴇᴇ ᴀʟʟ ᴜsᴇʀs ɪᴅ's ʟɪsᴛ.
-• /broadcast - ᴍᴇssᴀɢᴇ ʙʀᴏᴀᴅᴄᴀsᴛ ᴄᴏᴍᴍᴀɴᴅ.
-• /warn - sᴇɴᴅ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ᴀ ᴜsᴇʀ.
-• /restart - ᴄᴀɴᴄᴇʟ ᴀʟʟ ᴘʀᴏᴄᴇss ᴀɴᴅ ʀᴇsᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ.</blockquote></b>"""
+    "<b>• ᴀᴠᴀɪʟᴀʙʟᴇ ᴄᴏᴍᴍᴀɴᴅꜱ</b>\n\n"
+    "<blockquote><b>• <u>ᴛʜᴜᴍʙɴᴀɪʟ ꜱᴇᴛᴛɪɴɢꜱ</u>\n"
+    "• ꜱᴇɴᴅ ᴀɴʏ ᴘʜᴏᴛᴏ ᴛᴏ ꜱᴇᴛ ɪᴛ ᴀꜱ ᴀ ᴄᴜꜱᴛᴏᴍ ᴛʜᴜᴍʙɴᴀɪʟ.\n"
+    "• /viewthumb - ᴠɪᴇᴡ ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ᴛʜᴜᴍʙɴᴀɪʟ.\n"
+    "• /delthumb - ᴅᴇʟᴇᴛᴇ ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ᴛʜᴜᴍʙɴᴀɪʟ.\n\n"
+    "• <u>ᴄᴀᴘᴛɪᴏɴ ꜱᴇᴛᴛɪɴɢꜱ</u>\n"
+    "• /set_caption - ꜱᴇᴛ ᴀ ᴄᴜꜱᴛᴏᴍ ᴄᴀᴘᴛɪᴏɴ.\n"
+    "• /see_caption - ꜱᴇᴇ ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ᴄᴀᴘᴛɪᴏɴ.\n"
+    "• /del_caption - ᴅᴇʟᴇᴛᴇ ʏᴏᴜʀ ᴄᴜꜱᴛᴏᴍ ᴄᴀᴘᴛɪᴏɴ.\n\n"
+    "• <u>ʀᴇɴᴀᴍɪɴɢ ᴍᴏᴅᴇꜱ</u>\n"
+    "• /rename_mode - ꜱᴡɪᴛᴄʜ ʙᴇᴛᴡᴇᴇɴ ꜱɪɴɢʟᴇ ᴀɴᴅ ᴀᴜᴛᴏ ʀᴇɴᴀᴍᴇ.\n"
+    "• /format - ꜱᴇᴛ ʏᴏᴜʀ ᴀᴜᴛᴏ-ʀᴇɴᴀᴍᴇ ꜰᴏʀᴍᴀᴛ.\n"
+    "• /mode - ᴏᴘᴇɴ ᴛʜᴇ ʀᴇɴᴀᴍᴇ ᴍᴏᴅᴇ ᴍᴇɴᴜ.\n\n"
+    "• <u>ᴘʀᴇꜰɪx & ꜱᴜꜰꜰɪx</u>\n"
+    "• /set_prefix - ꜱᴇᴛ ᴀ ᴄᴜꜱᴛᴏᴍ ᴘʀᴇꜰɪx.\n"
+    "• /see_prefix - ꜱᴇᴇ ʏᴏᴜʀ ᴘʀᴇꜰɪx.\n"
+    "• /del_prefix - ᴅᴇʟᴇᴛᴇ ʏᴏᴜʀ ᴘʀᴇꜰɪx.\n"
+    "• /set_suffix - ꜱᴇᴛ ᴀ ᴄᴜꜱᴛᴏᴍ ꜱᴜꜰꜰɪx.\n"
+    "• /see_suffix - ꜱᴇᴇ ʏᴏᴜʀ ꜱᴜꜰꜰɪx.\n"
+    "• /del_suffix - ᴅᴇʟᴇᴛᴇ ʏᴏᴜʀ ꜱᴜꜰꜰɪx.\n\n"
+    "• <u>ᴏᴛʜᴇʀ ᴄᴏᴍᴍᴀɴᴅꜱ</u>\n"
+    "• /metadata - ᴄᴏɴꜰɪɢᴜʀᴇ ᴠɪᴅᴇᴏ ᴍᴇᴛᴀᴅᴀᴛᴀ.\n"
+    "• /spoiler - ᴀᴅᴅ ꜱᴘᴏɪʟᴇʀ ᴇꜰꜰᴇᴄᴛ ᴏɴ ʏᴏᴜʀ ᴍᴇᴅɪᴀ ꜰɪʟᴇꜱ.\n"
+    "• /donate - ꜱᴜᴘᴘᴏʀᴛ ᴛʜᴇ ᴅᴇᴠᴇʟᴏᴘᴇʀ.</b></blockquote>\n\n"
+    "<b>🔷 ᴀɴʏ ᴏᴛʜᴇʀ ʜᴇʟᴘ ᴄᴏɴᴛᴀᴄᴛ :-\n"
+    "@ST_Rename_Update</b>"
 )
 
 DONATE_TXT = os.environ.get(
     "DONATE_TXT",
-    "<b><blockquote>🪩 ᴛʜᴀɴᴋs ꜰᴏʀ sʜᴏᴡɪɴɢ ɪɴᴛᴇʀᴇsᴛ ɪɴ ᴅᴏɴᴀᴛɪᴏɴ! 🎐</blockquote></b>
-    <b><blockquote>ɪꜰ ʏᴏᴜ ʟɪᴋᴇ ᴍʏ ʙᴏᴛs & ᴘʀᴏᴊᴇᴄᴛs, ʏᴏᴜ ᴄᴀɴ 🎁 ᴅᴏɴᴀᴛᴇ ᴜs ᴀɴʏ ᴀᴍᴏᴜɴᴛ ꜰʀᴏᴍ 10 ʀs ᴜᴘᴛᴏ ʏᴏᴜʀ ᴄʜᴏɪᴄᴇ. ʏᴏᴜʀ sᴜᴘᴘᴏʀᴛ ʜᴇʟᴘs ᴜs ᴋᴇᴇᴘ ᴛʜᴇ sᴇʀᴠᴇʀs ʀᴜɴɴɪɴɢ ᴀɴᴅ ᴀᴅᴅ ᴍᴏʀᴇ ᴀᴡᴇsᴏᴍᴇ ꜰᴇᴀᴛᴜʀᴇs ꜰᴏʀ ᴇᴠᴇʀʏᴏɴᴇ ᴛᴏ ᴇɴᴊᴏʏ! ❤️</blockquote></b>
-    <b><blockquote>🛍 ᴜᴘɪ ɪᴅ: @upi</blockquote></b>"
+    "<blockquote><b>🎰 ᴛʜᴀɴᴋꜱ ꜰᴏʀ ꜱʜᴏᴡɪɴɢ ɪɴᴛᴇʀᴇꜱᴛ ɪɴ ᴅᴏɴᴀᴛɪᴏɴ! 🍧</b></blockquote>\n\n"
+    "<blockquote><b>ɪꜰ ʏᴏᴜ ʟɪᴋᴇ ᴍʏ ʙᴏᴛꜱ & ᴘʀᴏᴊᴇᴄᴛꜱ, ʏᴏᴜ ᴄᴀɴ\n"
+    "🎁 ᴅᴏɴᴀᴛᴇ ᴜꜱ ᴀɴʏ ᴀᴍᴏᴜɴᴛ ꜰʀᴏᴍ 10 ʀꜱ ᴜᴘᴛᴏ ʏᴏᴜʀ ᴄʜᴏɪᴄᴇ. ʏᴏᴜʀ ꜱᴜᴘᴘᴏʀᴛ ʜᴇʟᴘꜱ ᴜꜱ ᴋᴇᴇᴘ ᴛʜᴇ ꜱᴇʀᴠᴇʀꜱ ʀᴜɴɴɪɴɢ ᴀɴᴅ ᴀᴅᴅ ᴍᴏʀᴇ ᴀᴡᴇꜱᴏᴍᴇ ꜰᴇᴀᴛᴜʀᴇꜱ ꜰᴏʀ ᴇᴠᴇʀʏᴏɴᴇ ᴛᴏ ᴇɴᴊᴏʏ! ❤️</b></blockquote>\n\n"
+    "<blockquote><b>🛍️ ᴜᴘɪ ɪᴅ: acxanime@upi</b></blockquote>"
 )
 
 MORE_TXT = os.environ.get(
     "MORE_TXT",
-    "<b>• CLICK FOR MORE DETAILS •</b>\n\nHere you can find more information about our bot services and channel updates."
+    "<b>• ᴄʟɪᴄᴋ ꜰᴏʀ ᴍᴏʀᴇ ᴅᴇᴛᴀɪʟꜱ •</b>\n\n"
+    "ᴀᴠᴀɪʟᴀʙʟᴇ ᴛᴀɢꜱ: {filename}, {title}, {episode}, {season}, {quality}, {chapter}, {audio}"
 )
