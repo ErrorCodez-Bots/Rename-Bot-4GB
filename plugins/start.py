@@ -36,6 +36,18 @@ async def play_loading_animation(message_or_query):
         return None
 
 
+# Main Menu Buttons Generator
+def get_main_buttons():
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton("• CLICK FOR MORE •", callback_data="more")],
+        [
+            InlineKeyboardButton("HELP", callback_data='help'),
+            InlineKeyboardButton("UPDATES", url=UPDATE_CHANNEL)
+        ],
+        [InlineKeyboardButton("DONATE", callback_data='donate')]
+    ])
+
+
 @Client.on_message(filters.private & filters.command(["start"]))
 async def start(client, message):
     user_id = message.chat.id
@@ -44,7 +56,7 @@ async def start(client, message):
     except Exception:
         pass
     
-    # 1. Run Loading Animation & keep reference to delete it later
+    # 1. Run Loading Animation
     loading_msg = await play_loading_animation(message)
     
     # Clean Force Sub Channel Username
@@ -71,21 +83,11 @@ async def start(client, message):
 
     # 3. Show Start Text & Buttons
     text = START_TXT.format(mention=message.from_user.mention)
-    button = InlineKeyboardMarkup([
-        [
-            InlineKeyboardButton("❤️‍🩹 About", callback_data='about'),
-            InlineKeyboardButton("🛠️ Help", callback_data='help')
-        ],
-        [
-            InlineKeyboardButton("✖️ Close", callback_data='close')
-        ]
-    ])
+    button = get_main_buttons()
     
-    # Delete loading animation message
     if loading_msg:
         await loading_msg.delete()
 
-    # Send Photo if START_PIC exists, else send Text
     if START_PIC:
         try:
             await message.reply_photo(
@@ -105,12 +107,13 @@ async def start(client, message):
     )
 
 
-@Client.on_callback_query(filters.regex("^(about|help|back|close|try_again)$"))
+@Client.on_callback_query(filters.regex("^(about|help|home|back|donate|more|close|cancel|try_again)$"))
 async def callback_handler(client, query: CallbackQuery):
     data = query.data
     user_id = query.from_user.id
     f_sub = FORCE_SUBS.replace("@", "") if FORCE_SUBS else None
     
+    # Try Again (Force Sub)
     if data == "try_again":
         await query.message.delete()
         loading_msg = await play_loading_animation(query)
@@ -136,15 +139,7 @@ async def callback_handler(client, query: CallbackQuery):
             await loading_msg.delete()
 
         text = START_TXT.format(mention=query.from_user.mention)
-        button = InlineKeyboardMarkup([
-            [
-                InlineKeyboardButton("❤️‍🩹 About", callback_data='about'),
-                InlineKeyboardButton("🛠️ Help", callback_data='help')
-            ],
-            [
-                InlineKeyboardButton("✖️ Close", callback_data='close')
-            ]
-        ])
+        button = get_main_buttons()
         
         if START_PIC:
             try:
@@ -160,40 +155,51 @@ async def callback_handler(client, query: CallbackQuery):
 
         await query.message.reply_text(text=text, reply_markup=button)
 
-    elif data == "about":
-        text = ABOUT_TXT
+    # Home / Back
+    elif data in ["home", "back"]:
+        text = START_TXT.format(mention=query.from_user.mention)
+        button = get_main_buttons()
+        await query.message.edit_text(text=text, reply_markup=button)
+
+    # Click For More
+    elif data == "more":
+        text = globals().get('MORE_TXT', "<b>• CLICK FOR MORE DETAILS •</b>")
         button = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("🔙 Back", callback_data="back"),
-                InlineKeyboardButton("✖️ Close", callback_data="close")
+                InlineKeyboardButton("< BACK", callback_data="back"),
+                InlineKeyboardButton("CLOSE ×", callback_data="close")
             ]
         ])
         await query.message.edit_text(text=text, reply_markup=button, disable_web_page_preview=True)
 
+    # Help Menu
     elif data == "help":
         text = HELP_TXT
         button = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("🔙 Back", callback_data="back"),
-                InlineKeyboardButton("✖️ Close", callback_data="close")
+                InlineKeyboardButton("< BACK", callback_data="back"),
+                InlineKeyboardButton("CLOSE ×", callback_data="close")
             ]
         ])
         await query.message.edit_text(text=text, reply_markup=button, disable_web_page_preview=True)
 
-    elif data == "back":
-        text = START_TXT.format(mention=query.from_user.mention)
+    # Donate Menu
+    elif data == "donate":
+        text = globals().get('DONATE_TXT', "<b>Support the developer by donating! ❤️</b>")
+        owner_link = globals().get('OWNER_LINK', 'https://t.me/ST_Rename_Update')
         button = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("❤️‍🩹 About", callback_data='about'),
-                InlineKeyboardButton("🛠️ Help", callback_data='help')
+                InlineKeyboardButton("ADMIN 👑", url=owner_link),
+                InlineKeyboardButton("CLOSE ×", callback_data="close")
             ],
             [
-                InlineKeyboardButton("✖️ Close", callback_data='close')
+                InlineKeyboardButton("< BACK", callback_data="back")
             ]
         ])
-        await query.message.edit_text(text=text, reply_markup=button)
+        await query.message.edit_text(text=text, reply_markup=button, disable_web_page_preview=True)
 
-    elif data == "close":
+    # Close Menu
+    elif data in ["close", "cancel"]:
         await query.message.delete()
         try:
             await query.message.reply_to_message.delete()
@@ -298,3 +304,4 @@ async def send_doc(client, message):
              InlineKeyboardButton("✖️ Cancel", callback_data="cancel")]
         ])
     )
+
