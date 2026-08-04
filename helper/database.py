@@ -161,7 +161,7 @@ async def get_user_settings(user_id):
             "quality_thumbs": "Off",
             "copy_source_thumb": False,
             "format": "{filename}",
-            "caption": user.get("caption") if user else None
+            "caption": None
         }
     return {
         "rename_mode": user.get("rename_mode", "FILENAME"),
