@@ -14,8 +14,8 @@ FORCE_SUBS = os.environ.get("FORCE_SUBS", "")
 LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", ""))
 
 # Mongo DB Database Config
-DB_URL = os.environ.get("DB_URL", "")
-DB_NAME = os.environ.get("DB_NAME", "madflixbotz")
+DATABASE_URL = os.environ.get("DB_URL", "")
+DATABASE_NAME = os.environ.get("DB_NAME", "madflixbotz")
 
 # Single Start Picture (Fallback)
 START_PIC = os.environ.get("START_PIC", "https://telegra.ph/file/8dd38af99889caea1cf4b-2bd9a6e6cfb04c2b95.jpg")
