@@ -22,18 +22,30 @@
   - `FORCE_SUB` - Force subscribe channel username without `@`
   - `LOG_CHANNEL` - Log Channel ID.
   - `START_PIC` - Start Message Photo. You Don't Need This! Just Skip
-  - `WEBHOOK` -  If Your Server Is Need Web Service! Value = True Else Value = False
+  - `STRING_SESSION` -  If Your Server Is Need Web Service! Value = True Else Value = False
 
 ## - ᴄᴏᴍᴍᴀɴᴅs
 ```
 • /start - ᴛᴏ ꜱᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ
 • /restart - To Rrstart The Bot (Admin Only)
-• /view_thumb - ᴛᴏ ᴠɪᴇᴡ ʏᴏᴜʀ ᴛʜᴜᴍʙɴᴀɪʟ
-• /del_thumb - ᴛᴏ ᴅᴇʟᴇᴛᴇ ʏᴏᴜʀ ᴛʜᴜᴍʙɴᴀɪʟ
-• /set_caption - ᴛᴏ ꜱᴇᴛ ᴄᴜꜱᴛᴏᴍ ᴄᴀᴘᴛɪᴏɴ
-• /del_caption - ᴛᴏ ᴅᴇʟᴇᴛᴇ ᴄᴀᴘᴛɪᴏɴ
-• /see_caption - ᴛᴏ ᴄʜᴇᴄᴋ ᴄᴜʀʀᴇɴᴛ ᴄᴀᴘᴛɪᴏɴ
-• /broadcast - ꜱᴇɴᴅ ᴍᴇꜱꜱᴀɢᴇ ᴛᴏ ᴀʟʟ ᴜꜱᴇʀꜱ
+• /viewthumb - ᴠɪᴇᴡ ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ᴛʜᴜᴍʙɴᴀɪʟ
+• /delthumb - ᴅᴇʟᴇᴛᴇ ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ᴛʜᴜᴍʙɴᴀɪʟ
+• /set_caption - ꜱᴇᴛ ᴀ ᴄᴜꜱᴛᴏᴍ ᴄᴀᴘᴛɪᴏɴ
+• /see_caption - ꜱᴇᴇ ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ᴄᴀᴘᴛɪᴏɴ
+• /del_caption - ᴅᴇʟᴇᴛᴇ ʏᴏᴜʀ ᴄᴜꜱᴛᴏᴍ ᴄᴀᴘᴛɪᴏɴ
+• /rename_mode - ꜱᴡɪᴛᴄʜ ʙᴇᴛᴡᴇᴇɴ ꜱɪɴɢʟᴇ ᴀɴᴅ ᴀᴜᴛᴏ ʀᴇɴᴀᴍᴇ
+• /format - ꜱᴇᴛ ʏᴏᴜʀ ᴀᴜᴛᴏ-ʀᴇɴᴀᴍᴇ ꜰᴏʀᴍᴀᴛ
+• /mode - ᴏᴘᴇɴ ᴛʜᴇ ʀᴇɴᴀᴍᴇ ᴍᴏᴅᴇ ᴍᴇɴᴜ
+• /set_prefix - ꜱᴇᴛ ᴀ ᴄᴜꜱᴛᴏᴍ ᴘʀᴇꜰɪx
+• /see_prefix - ꜱᴇᴇ ʏᴏᴜʀ ᴘʀᴇꜰɪx
+• /del_prefix - ᴅᴇʟᴇᴛᴇ ʏᴏᴜʀ ᴘʀᴇꜰɪx
+• /set_suffix - ꜱᴇᴛ ᴀ ᴄᴜꜱᴛᴏᴍ ꜱᴜꜰꜰɪx
+• /see_suffix - ꜱᴇᴇ ʏᴏᴜʀ ꜱᴜꜰꜰɪx
+• /del_suffix - ᴅᴇʟᴇᴛᴇ ʏᴏᴜʀ ꜱᴜꜰꜰɪx
+• /metadata - ᴄᴏɴꜰɪɢᴜʀᴇ ᴠɪᴅᴇᴏ ᴍᴇᴛᴀᴅᴀᴛᴀ
+• /spoiler - ᴀᴅᴅ ꜱᴘᴏɪʟᴇʀ ᴇꜰꜰᴇᴄᴛ ᴏɴ ʏᴏᴜʀ ᴍᴇᴅɪᴀ ꜰɪʟᴇꜱ
+• /donate - ꜱᴜᴘᴘᴏʀᴛ ᴛʜᴇ ᴅᴇᴠᴇʟᴏᴘᴇʀ
+• /broadcast - ꜱᴇɴᴅ ᴍᴇꜱꜱᴀɢᴇ ᴛᴏ ᴀʟʟ ᴜꜱᴇʀꜱ ( Admin Only ) 
 
 ### ᴀᴅᴍɪɴ ᴄᴏᴍᴍᴀɴᴅs
 
