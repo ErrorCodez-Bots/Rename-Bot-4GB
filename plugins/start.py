@@ -22,14 +22,14 @@ FOUR_GB = 4294967296
 async def play_loading_animation(message_or_query):
     try:
         if isinstance(message_or_query, CallbackQuery):
-            msg = await message_or_query.message.reply_text("<code>Loading.</code>")
+            msg = await message_or_query.message.reply_text("<code>ʟᴏᴀᴅɪɴɢ.</code>")
         else:
-            msg = await message_or_query.reply_text("<code>Loading.</code>")
+            msg = await message_or_query.reply_text("<code>ʟᴏᴀᴅɪɴɢ.</code>")
             
         await asyncio.sleep(0.4)
-        await msg.edit_text("<code>Loading..</code>")
+        await msg.edit_text("<code>ʟᴏᴀᴅɪɴɢ..</code>")
         await asyncio.sleep(0.4)
-        await msg.edit_text("<code>Loading...</code>")
+        await msg.edit_text("<code>ʟᴏᴀᴅɪɴɢ...</code>")
         await asyncio.sleep(0.4)
         return msg
     except Exception:
@@ -39,12 +39,12 @@ async def play_loading_animation(message_or_query):
 # Main Menu Buttons Generator
 def get_main_buttons():
     return InlineKeyboardMarkup([
-        [InlineKeyboardButton("• CLICK FOR MORE •", callback_data="more")],
+        [InlineKeyboardButton("• ᴄʟɪᴄᴋ ꜰᴏʀ ᴍᴏʀᴇ •", callback_data="more")],
         [
-            InlineKeyboardButton("HELP", callback_data='help'),
-            InlineKeyboardButton("UPDATES", url=UPDATE_CHANNEL)
+            InlineKeyboardButton("ʜᴇʟᴘ", callback_data='help'),
+            InlineKeyboardButton("ᴜᴘᴅᴀᴛᴇꜱ", url=UPDATE_CHANNEL)
         ],
-        [InlineKeyboardButton("DONATE", callback_data='donate')]
+        [InlineKeyboardButton("ᴅᴏɴᴀᴛᴇ", callback_data='donate')]
     ])
 
 
@@ -69,12 +69,16 @@ async def start(client, message):
         except UserNotParticipant:
             if loading_msg:
                 await loading_msg.delete()
+            
+            # Fetch Force Sub Message from config.py
+            force_text = globals().get('FORCE_SUB_TEXT', "<b>ʜᴇʟʟᴏ {first_name} 👋\n\nʏᴏᴜ ɴᴇᴇᴅ ᴛᴏ ᴊᴏɪɴ ɪɴ ᴍʏ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜꜱᴇ ᴍᴇ.\n\nᴋɪɴᴅʟʏ ᴘʟᴇᴀꜱᴇ ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ ʙᴇʟᴏᴡ!</b>")
+            
             await message.reply_text(
-                "<b>Hello Dear \n\nYou Need To Join In My Channel To Use Me\n\nKindly Please Join Channel</b>",
+                force_text.format(first_name=message.from_user.first_name),
                 reply_to_message_id=message.id,
                 reply_markup=InlineKeyboardMarkup([
-                    [InlineKeyboardButton("🔺 Update Channel 🔺", url=f"https://t.me/{f_sub}")],
-                    [InlineKeyboardButton("🔄 Try Again", callback_data="try_again")]
+                    [InlineKeyboardButton("🔺 ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ 🔺", url=f"https://t.me/{f_sub}")],
+                    [InlineKeyboardButton("🔄 ᴛʀʏ ᴀɢᴀɪɴ", callback_data="try_again")]
                 ])
             )
             return
@@ -124,11 +128,15 @@ async def callback_handler(client, query: CallbackQuery):
             except UserNotParticipant:
                 if loading_msg:
                     await loading_msg.delete()
+                
+                # Fetch Force Sub Message from config.py
+                force_text = globals().get('FORCE_SUB_TEXT', "<b>ʜᴇʟʟᴏ {first_name} 👋\n\nʏᴏᴜ ɴᴇᴇᴅ ᴛᴏ ᴊᴏɪɴ ɪɴ ᴍʏ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜꜱᴇ ᴍᴇ.\n\nᴋɪɴᴅʟʏ ᴘʟᴇᴀꜱᴇ ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ ʙᴇʟᴏᴡ!</b>")
+
                 await query.message.reply_text(
-                    "<b>Hello Dear \n\nYou Need To Join In My Channel To Use Me\n\nKindly Please Join Channel</b>",
+                    force_text.format(first_name=query.from_user.first_name),
                     reply_markup=InlineKeyboardMarkup([
-                        [InlineKeyboardButton("🔺 Update Channel 🔺", url=f"https://t.me/{f_sub}")],
-                        [InlineKeyboardButton("🔄 Try Again", callback_data="try_again")]
+                        [InlineKeyboardButton("🔺 ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ 🔺", url=f"https://t.me/{f_sub}")],
+                        [InlineKeyboardButton("🔄 ᴛʀʏ ᴀɢᴀɪɴ", callback_data="try_again")]
                     ])
                 )
                 return
@@ -163,11 +171,11 @@ async def callback_handler(client, query: CallbackQuery):
 
     # Click For More
     elif data == "more":
-        text = globals().get('MORE_TXT', "<b>• CLICK FOR MORE DETAILS •</b>")
+        text = globals().get('MORE_TXT', "<b>• ᴄʟɪᴄᴋ ꜰᴏʀ ᴍᴏʀᴇ ᴅᴇᴛᴀɪʟꜱ •</b>")
         button = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("< BACK", callback_data="back"),
-                InlineKeyboardButton("CLOSE ×", callback_data="close")
+                InlineKeyboardButton("< ʙᴀᴄᴋ", callback_data="back"),
+                InlineKeyboardButton("ᴄʟᴏꜱᴇ ×", callback_data="close")
             ]
         ])
         await query.message.edit_text(text=text, reply_markup=button, disable_web_page_preview=True)
@@ -177,19 +185,19 @@ async def callback_handler(client, query: CallbackQuery):
         text = HELP_TXT
         button = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("< BACK", callback_data="back"),
-                InlineKeyboardButton("CLOSE ×", callback_data="close")
+                InlineKeyboardButton("< ʙᴀᴄᴋ", callback_data="back"),
+                InlineKeyboardButton("ᴄʟᴏꜱᴇ ×", callback_data="close")
             ]
         ])
         await query.message.edit_text(text=text, reply_markup=button, disable_web_page_preview=True)
 
-    # Donate Menu (Admin Button Removed, Only Back and Close)
+    # Donate Menu (Fetches DONATE_TXT from config.py)
     elif data == "donate":
-        text = globals().get('DONATE_TXT', "<b>Support the developer by donating! ❤️</b>")
+        text = DONATE_TXT
         button = InlineKeyboardMarkup([
             [
-                InlineKeyboardButton("< BACK", callback_data="back"),
-                InlineKeyboardButton("CLOSE ×", callback_data="close")
+                InlineKeyboardButton("< ʙᴀᴄᴋ", callback_data="back"),
+                InlineKeyboardButton("ᴄʟᴏꜱᴇ ×", callback_data="close")
             ]
         ])
         await query.message.edit_text(text=text, reply_markup=button, disable_web_page_preview=True)
@@ -220,12 +228,15 @@ async def send_doc(client, message):
         try:
             await client.get_chat_member(f_sub, user_id)
         except UserNotParticipant:
+            # Fetch Force Sub Message from config.py
+            force_text = globals().get('FORCE_SUB_TEXT', "<b>ʜᴇʟʟᴏ {first_name} 👋\n\nʏᴏᴜ ɴᴇᴇᴅ ᴛᴏ ᴊᴏɪɴ ɪɴ ᴍʏ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜꜱᴇ ᴍᴇ.\n\nᴋɪɴᴅʟʏ ᴘʟᴇᴀꜱᴇ ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ ʙᴇʟᴏᴡ!</b>")
+
             await message.reply_text(
-                "<b>Hello Dear \n\nYou Need To Join In My Channel To Use Me\n\nKindly Please Join Channel</b>",
+                force_text.format(first_name=message.from_user.first_name),
                 reply_to_message_id=message.id,
                 reply_markup=InlineKeyboardMarkup([
-                    [InlineKeyboardButton("🔺 Update Channel 🔺", url=f"https://t.me/{f_sub}")],
-                    [InlineKeyboardButton("🔄 Try Again", callback_data="try_again")]
+                    [InlineKeyboardButton("🔺 ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ 🔺", url=f"https://t.me/{f_sub}")],
+                    [InlineKeyboardButton("🔄 ᴛʀʏ ᴀɢᴀɪɴ", callback_data="try_again")]
                 ])
             )
             return
@@ -250,7 +261,7 @@ async def send_doc(client, message):
             if left > 0:
                 ltime = str(datetime.timedelta(seconds=left))
                 await message.reply_text(
-                    f"<b>Flood Control Is Active. Please Wait For {ltime} </b>", 
+                    f"<b>ꜰʟᴏᴏᴅ ᴄᴏɴᴛʀᴏʟ ɪꜱ ᴀᴄᴛɪᴠᴇ. ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ ꜰᴏʀ {ltime} </b>", 
                     reply_to_message_id=message.id
                 )
                 return
@@ -266,19 +277,19 @@ async def send_doc(client, message):
     try:
         dcid = FileId.decode(file.file_id).dc_id
     except Exception:
-        dcid = "Unknown"
+        dcid = "ᴜɴᴋɴᴏᴡɴ"
 
     filename = getattr(file, 'file_name', 'media_file')
 
     # 4GB Check
     if file.file_size > FOUR_GB:
-        await message.reply_text("You Can't Upload Files Larger Than 4GB.")
+        await message.reply_text("ʏᴏᴜ ᴄᴀɴ'ᴛ ᴜᴘʟᴏᴀᴅ ꜰɪʟᴇꜱ ʟᴀʀɢᴇʀ ᴛʜᴀɴ 4ɢʙ.")
         return
 
     # Check for String Session for files > 2GB
     string_sess = globals().get('STRING_SESSION', None)
     if file.file_size > 2147483648 and not string_sess:
-        await message.reply_text("Cannot Process Files Larger Than 2GB Without Userbot String Session Configured.")
+        await message.reply_text("ᴄᴀɴɴᴏᴛ ᴘʀᴏᴄᴇꜱꜱ ꜰɪʟᴇꜱ ʟᴀʀɢᴇʀ ᴛʜᴀɴ 2ɢʙ ᴡɪᴛʜᴏᴜᴛ ᴜꜱᴇʀʙᴏᴛ ꜱᴛʀɪɴɢ ꜱᴇꜱꜱɪᴏɴ ᴄᴏɴꜰɪɢᴜʀᴇᴅ.")
         return
 
     filesize = humanize.naturalsize(file.file_size)
@@ -290,13 +301,13 @@ async def send_doc(client, message):
         pass
 
     await message.reply_text(
-        f"__What Do You Want Me To Do With This File ?__\n\n"
-        f"**File Name :** `{filename}`\n"
-        f"**File Size :** {filesize}\n"
-        f"**DC ID :** {dcid}",
+        f"__ᴡʜᴀᴛ ᴅᴏ ʏᴏᴜ ᴡᴀɴᴛ ᴍᴇ ᴛᴏ ᴅᴏ ᴡɪᴛʜ ᴛʜɪꜱ ꜰɪʟᴇ ?__\n\n"
+        f"**ꜰɪʟᴇ ɴᴀᴍᴇ :** `{filename}`\n"
+        f"**ꜰɪʟᴇ ꜱɪᴢᴇ :** {filesize}\n"
+        f"**ᴅᴄ ɪᴅ :** {dcid}",
         reply_to_message_id=message.id,
         reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("📝 Rename", callback_data="rename"),
-             InlineKeyboardButton("✖️ Cancel", callback_data="cancel")]
+            [InlineKeyboardButton("📝 ʀᴇɴᴀᴍᴇ", callback_data="rename"),
+             InlineKeyboardButton("✖️ ᴄᴀɴᴄᴇʟ", callback_data="cancel")]
         ])
     )
