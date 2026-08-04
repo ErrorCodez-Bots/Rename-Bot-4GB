@@ -1,11 +1,11 @@
 import pymongo
 import os
 from helper.date import add_date
-from config import *
-mongo = pymongo.MongoClient(DATABASE_URL)
-db = mongo[DATABASE_NAME]
-dbcol = db["user"]
+from config import DATABASE_URL as DB_URL, DATABASE_NAME as DB_NAME
 
+mongo = pymongo.MongoClient(DB_URL)
+db = mongo[DB_NAME]
+dbcol = db["user"]
 
 
 # Total User
@@ -138,13 +138,3 @@ def delete(id):
 
 def find_one(id):
     return dbcol.find_one({"_id": id})
-
-
-
-    
-
-# Jishu Developer 
-# Don't Remove Credit 🥺
-# Telegram Channel @Madflix_Bots
-# Back-Up Channel @JishuBotz
-# Developer @JishuDeveloper & @MadflixOfficials
